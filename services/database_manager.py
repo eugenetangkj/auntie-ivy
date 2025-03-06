@@ -319,7 +319,6 @@ Parameters:
     - user_id: ID of the user
     - is_audio_enabled_value_to_use: Value to set for the is_audio_enabled field
 
-
 '''
 def set_is_audio_enabled(user_id, is_audio_enabled_value_to_use):
     # Connect to the database
@@ -336,4 +335,32 @@ def set_is_audio_enabled(user_id, is_audio_enabled_value_to_use):
    
     # Commit the transaction and close the connection
     conn.commit()
+    conn.close()
+
+
+'''
+Add a list of knowledge rows into the knowledge table
+
+Parameters:
+    - user_id: ID of the user
+    - knowledge_rows: List of knowledge to be added
+'''
+def add_knowledge(user_id, knowledge_rows):
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Insert the knowledge rows into the knowledge table
+    for knowledge_row in knowledge_rows:
+        cursor.execute(
+            """
+            INSERT INTO knowledge (user_id, fact, date_updated)
+            VALUES (%s, %s, %s)
+            """,
+            (user_id, knowledge_row, datetime.now())
+        )
+    
+    # Commit the transaction and close the connection
+    conn.commit()
+    cursor.close()
     conn.close()

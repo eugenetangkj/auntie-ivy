@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import CallbackContext
-from services.database_manager import updateUserTopicAndStage
+from services.database_manager import updateUserTopicAndStage, determineUserTopic
 from definitions.topics import MIN_TOPIC, MAX_TOPIC, TOPIC_NAMES
 
 '''
@@ -22,9 +22,12 @@ async def handle_topic(update: Update, context: CallbackContext):
         try:
             # Extract the number from the command argument
             topic_num = int(context.args[0])
+            user_current_topic = determineUserTopic(user_id)
 
             # Determine if topic number is a valid topic number
-            if (topic_num >= MIN_TOPIC and topic_num <= MAX_TOPIC):
+            if (topic_num == user_current_topic):
+                await update.message.reply_text("You are already in Topic {}.".format(topic_num))
+            elif (topic_num >= MIN_TOPIC and topic_num <= MAX_TOPIC):
                 updateUserTopicAndStage(user_id, topic_num, 1)
                 await update.message.reply_text("Topic has been changed to Topic {}: {}".format(topic_num, TOPIC_NAMES[topic_num]))
             else:
