@@ -1,0 +1,6 @@
+openai==1.63.2
+psycopg2==2.9.10
+psycopg2_binary==2.9.7
+pydub==0.25.1
+python-dotenv==1.0.1
+python-telegram-bot==21.10
