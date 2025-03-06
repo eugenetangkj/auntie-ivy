@@ -17,3 +17,13 @@ CREATE TABLE conversation_history (
 	-- Cascading deletion where if a user is deleted, all its conversation history will be cleared as well
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+CREATE TABLE knowledge (
+    id SERIAL PRIMARY KEY,
+	user_id BIGINT NOT NULL,
+    fact TEXT NOT NULL,
+    date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    -- Cascading deletion where if a user is deleted, all the knowledge with the user will be cleared as well
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
