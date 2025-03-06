@@ -16,7 +16,7 @@ START command messages
 '''
 # Start message for topic 1
 START_COMMAND_MESSAGE_TOPIC_1 = (
-    "Hi {}. I am Auntie Ivy. I am also a senior learning about deepfakes today. I am trying to understand how deepfakes are created. Would you happen to know how they are created?"
+    "Hi {}. I am Auntie Ivy. I am also a senior learning about deepfakes today. I am trying to understand how deepfakes are created. Can you help explain it to me?"
 )
 
 # Start message for topic 2

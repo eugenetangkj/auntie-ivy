@@ -1,7 +1,7 @@
 from services.database_manager import saveMessageToConversationHistory
 from definitions.role import Role
 from services.openai_manager import generate_speech_whisper, AUDIO_WHISPER_PATH
-from services.database_manager import fetchConversationHistory
+from services.database_manager import fetchConversationHistory, determine_is_audio_enabled
 from prompts.common_prompts import AUDIO_PRODUCTION_ERROR
 import os
 
@@ -50,34 +50,27 @@ def prepare_messages_array(prompt, user_id, lower_bound_topic, lower_bound_stage
 
 
 '''
-Outputs a text message and saves it into the database.
+Outputs a text message and saves it into the database if needed.
 
 Parameters:
-    - user_id: ID of the user
     - message: Message to output and save
-    - current_topic: Topic to save the message
-    - current_stage: Stage to save the message
     - update: Update frame from Telegram
 '''
-async def output_and_save_text_message(user_id, message, current_topic, current_stage, update):
+async def output_and_save_text_message(message, update):
     await update.message.reply_text(message, parse_mode="markdown")
-    saveMessageToConversationHistory(user_id, Role.SYSTEM, message, current_topic, current_stage)
 
 
 '''
-Produce a voice message for the given text message. If it does not work,
+Outputs a voice message for the given text message. If it does not work,
 produce a text message instead.
 
-Then, save the message into the database.
+Then, save the message into the database if needed.
 
 Parameters:
-    - user_id: ID of the user
     - message: Message to output and save
-    - current_topic: Topic to save the message
-    - current_stage: Stage to save the message
     - update: Update frame from Telegram
 '''
-async def produce_voice_message(user_id, message, current_topic, current_stage, update):
+async def output_and_save_voice_message(message, update):
     audio_file_path = generate_speech_whisper(message)
     if audio_file_path is not None:
         # Successful audio production so we send the voice message to the user.
@@ -96,6 +89,27 @@ async def produce_voice_message(user_id, message, current_topic, current_stage, 
 
         # Delete audio files that are created
         os.remove(AUDIO_WHISPER_PATH)
-    
-    # Save message
-    saveMessageToConversationHistory(user_id, Role.SYSTEM, message, current_topic, current_stage)
+
+
+'''
+Produces either text or voice message, depending on whether the user has enabled audio output.
+
+Parameters:
+    - user_id: ID of the user
+    - message: Message to output and save
+    - current_topic: Topic to save the message
+    - current_stage: Stage to save the message
+    - update: Update frame from Telegram
+    - should_save_message: Whether message should be saved into the conversation history table
+'''
+async def produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, should_save_message=True):
+    if (determine_is_audio_enabled(user_id)):
+        # Case 1: Audio is enabled. We need to output audio message
+        await output_and_save_voice_message(message, update)
+    else:
+        # Case 2: Audio is disabled. We need to output text message
+        await output_and_save_text_message(message, update)
+
+    # Save the system message if needed
+    if should_save_message:
+        saveMessageToConversationHistory(user_id, Role.SYSTEM, message, current_topic, current_stage)
