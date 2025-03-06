@@ -38,6 +38,21 @@ The senior's reply is: {}
 '''
 )
 
+TOPIC_1_STAGE_1_INTENT_CLASSIFIER = (
+'''
+You are talking to a senior via Telegram. Look at the conversation history and focus on the last message provided by the senior.
+Your task is to identify the intent of this last message.
+
+Classify the intent into one of the following four categories and output only the intent number (1, 2, 3, or 4):
+
+1. The senior provides information about how deepfakes are created, even if they use phrases like "I think" or "Maybe". 
+2. The senior affirms that the knowledge they provided is correct.  
+3. The senior is stuck, or asking a question related to how deepfakes are created.  
+4. The senior's response does not match any of the above intents.  
+
+Only output the intent number (1, 2, 3, or 4) without any additional text.
+'''
+)
 
 
 
