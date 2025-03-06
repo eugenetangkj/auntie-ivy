@@ -364,3 +364,34 @@ def add_knowledge(user_id, knowledge_rows):
     conn.commit()
     cursor.close()
     conn.close()
+
+
+'''
+Retrieves the current knowledge facts of the agent.
+
+Parameters:
+    - user_id: ID of the user
+
+Returns:
+    - A list of knowledge facts that the agent currently has
+
+'''
+def fetchKnowledge(user_id):
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Execute query to fetch all rows that match the given user_id
+    cursor.execute("SELECT fact FROM knowledge WHERE user_id = %s", (user_id,))
+    
+    # Fetch all matching rows
+    rows = cursor.fetchall()
+    
+    # Extract just the 'fact' column from each row and return it as a list
+    facts = [row[0] for row in rows]
+    
+    # Close the connection
+    conn.close()
+    
+    # Return the facts list
+    return facts

@@ -2,8 +2,9 @@ from services.database_manager import saveMessageToConversationHistory
 from telegram import Update
 from services.message_manager import produce_text_or_voice_message
 from definitions.role import Role
-from determine_relevance import determine_if_answer_is_relevant
-from intent_classifier import determine_intent
+from handler_functions.topic_1.determine_relevance import determine_if_answer_is_relevant
+from handler_functions.topic_1.intent_classifier import determine_intent
+from handler_functions.topic_1.handle_intent_three import formulate_response_intent_three
 
 
 '''
@@ -49,9 +50,14 @@ async def handle_topic_one_stage_one(user_id: int, update: Update, user_message:
     intent_number = determine_intent(user_id)
 
 
-    await update.message.reply_text(str(intent_number), parse_mode="markdown")
-
-
+    if (intent_number == 1):
+        print(1)
+    elif (intent_number == 2):
+        print(2)
+    elif (intent_number == 3):
+        await formulate_response_intent_three(user_id, update)
+    else:
+        print(4)
 
 
 
