@@ -48,5 +48,11 @@ async def reply_to_user_message(update: Update, user_id: int, user_message: str)
     if (current_topic == 1):
         # TOPIC 1: How is a deepfake created
         await handle_topic_one_stage_one(user_id, update, user_message)
+    elif (current_topic == 2):
+        # TOPIC 2: How to spot deepfakes
+        if (current_stage == 1):
+            print("TODO for stage 1")
+        else:
+            print("TODO for stage 2")
     else:
         await update.message.reply_text("We are still constructing this part of the conversational flow.")

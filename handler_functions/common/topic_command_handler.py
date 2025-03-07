@@ -30,6 +30,7 @@ async def handle_topic(update: Update, context: CallbackContext):
             elif (topic_num >= MIN_TOPIC and topic_num <= MAX_TOPIC):
                 updateUserTopicAndStage(user_id, topic_num, 1)
                 await update.message.reply_text("Topic has been changed to Topic {}: {}".format(topic_num, TOPIC_NAMES[topic_num]))
+                await update.message.reply_text("Please run the `/start` command.")
             else:
                 await update.message.reply_text("Please select a valid topic number in [{}, {}].".format(MIN_TOPIC, MAX_TOPIC))
 
