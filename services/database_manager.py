@@ -280,6 +280,56 @@ def fetchConversationHistory(user_id, current_topic_lower_bound, current_stage_l
     return result
 
 
+
+'''
+Retrieves the latest message in the conversation history of the given user that falls within
+the specified topics and stages (inclusive).
+
+Parameters:
+    - user_id: ID of the user whose conversation history is to be fetched
+    - current_topic_lower_bound: Lower bound for topic to fetch from
+    - current_stage_lower_bound: Lower bound for stage to fetch from
+    - current_topic_upper_bound: Upper bound for topic to fetch from
+    - current_stage_upper_bound: Upper bound for stage to fetch from
+
+Returns:
+    - The latest message
+
+'''
+def fetchLatestMessage(user_id, current_topic_lower_bound, current_stage_lower_bound, current_topic_upper_bound, current_stage_upper_bound):
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # SQL query to fetch the latest message based on the conditions
+    cursor.execute("""
+    SELECT message
+    FROM conversation_history
+    WHERE user_id = %s
+      AND (
+          (current_topic = %s AND current_stage >= %s) 
+          OR (current_topic > %s AND current_stage < %s)
+          OR (current_topic = %s AND current_stage <= %s)
+      )
+    ORDER BY datetime DESC
+    LIMIT 1
+    """, (user_id, 
+          current_topic_lower_bound, current_stage_lower_bound,
+          current_topic_lower_bound, current_stage_upper_bound,
+          current_topic_upper_bound, current_stage_upper_bound)
+    )
+    
+    # Fetch the latest message (only one row)
+    result = cursor.fetchone()
+    
+    # Close the connection
+    conn.close()
+    
+    # Return output
+    return result
+
+
+
 '''
 Determines if the user has enabled audio mode or not. If the user turns on the audio mode,
 it means that the user wants the bot to reply via a voice message instead of a text message.
@@ -395,3 +445,30 @@ def fetchKnowledge(user_id):
     
     # Return the facts list
     return facts
+
+
+'''
+Retrieves the current knowledge facts of the agent, along with the IDs of the knowledge facts.
+
+Parameters:
+    - user_id: ID of the user
+
+Returns:
+    - A list of tuples. Each tuple is (id, knowledge_fact)
+
+'''
+def fetchKnowledgeWithId(user_id):
+    try:
+        # Connect to the database using a context manager
+        with get_db_connection() as conn:
+            with conn.cursor() as cursor:
+                # Execute query to fetch both id and fact columns
+                cursor.execute("SELECT id, fact FROM knowledge WHERE user_id = %s", (user_id,))
+                rows = cursor.fetchall()
+                
+                # Extract (id, fact) tuples into a list
+                facts = [(row[0], row[1]) for row in rows]
+        return facts
+    except Exception as e:
+        print(f"Error fetching knowledge: {e}")
+        return []

@@ -1,4 +1,4 @@
-from prompts.topic_1_prompts import TOPIC_1_STAGE_1_INTENT_THREE_PROMPT
+from prompts.topic_1_prompts import TOPIC_1_STAGE_1_INTENT_FOUR_PROMPT
 from services.openai_manager import generate_text_gpt
 from services.message_manager import prepare_messages_array, produce_text_or_voice_message
 from services.helper_functions import convert_list_to_bullet_points
@@ -13,8 +13,8 @@ current_stage = 1
 
 
 '''
-Handles what to do if the learner needs help or is asking a question. The agent tries to formulate
-a response based on its current knowledge.
+Handles what to do if the intent does not fall into any of the specified intents. The agent tries to formulate
+a response based on its current knowledge to keep the conversation going.
 
 Parameters:
     - user_id: ID of the user
@@ -23,14 +23,14 @@ Parameters:
 Return:
     - No return value
 '''
-async def formulate_response_intent_three(user_id, update):
+async def formulate_response_intent_four(user_id, update):
     knowledge_facts = fetchKnowledge(user_id)
     knowledge_facts_string = convert_list_to_bullet_points(knowledge_facts)
 
     
     
     messages = prepare_messages_array(
-        prompt=TOPIC_1_STAGE_1_INTENT_THREE_PROMPT.format(knowledge_facts_string),
+        prompt=TOPIC_1_STAGE_1_INTENT_FOUR_PROMPT.format(knowledge_facts_string),
         user_id=user_id,
         lower_bound_topic=current_topic,
         lower_bound_stage=current_stage,
