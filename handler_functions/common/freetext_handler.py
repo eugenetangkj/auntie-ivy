@@ -2,8 +2,8 @@ from prompts.common_prompts import REQUEST_TO_DELETE_MESSAGE
 from telegram import Update
 from telegram.ext import CallbackContext
 from services.database_manager import determineUserTopicAndStage, saveMessageToConversationHistory
-from definitions.role import Role
 from handler_functions.topic_1.topic_one_stage_one import handle_topic_one_stage_one
+from handler_functions.topic_2.stage_one.topic_two_stage_one import handle_topic_two_stage_one
 
 
 '''
@@ -51,7 +51,7 @@ async def reply_to_user_message(update: Update, user_id: int, user_message: str)
     elif (current_topic == 2):
         # TOPIC 2: How to spot deepfakes
         if (current_stage == 1):
-            print("TODO for stage 1")
+            await handle_topic_two_stage_one(user_id, update, user_message)
         else:
             print("TODO for stage 2")
     else:

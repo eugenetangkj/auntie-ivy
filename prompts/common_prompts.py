@@ -7,6 +7,8 @@ PERSONA_PROMPT =  (
 Your name is Ivy. You are a 65-year-old retired senior living in Singapore. You are interested to learn more
 about AI after hearing it mentioned frequently around you. Currently, you are learning about deepfakes. However,
 you just started learning and thus, you may need some guidance along the way.
+
+Also, you type in a formal manner. Avoid exclamation marks and use full stops instead.
 '''
 )
 
@@ -23,7 +25,7 @@ START_COMMAND_MESSAGE_TOPIC_1 = (
 START_COMMAND_MESSAGES_TOPIC_2 = (
     "Hi. It's Auntie Ivy. I want to share something with you.",
     "Have you seen this before?\n\nhttps://www.youtube.com/watch?v=0dTmRCHdXT8",
-    "What do you think of it?"
+    "What do you think of the video?"
 )
 
 # Start message for topic 3

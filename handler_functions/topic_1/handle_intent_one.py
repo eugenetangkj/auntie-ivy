@@ -28,7 +28,7 @@ Return:
     - No return value
 '''
 async def formulate_response_intent_one(user_id, update):
-    knowledge_facts_with_id = fetchKnowledgeWithId(user_id)
+    knowledge_facts_with_id = fetchKnowledgeWithId(user_id, current_topic)
     formatted_knowledge_facts_with_id =  "\n".join([f"ID: {id}, Fact: {fact}" for id, fact in knowledge_facts_with_id])
     
     messages = prepare_messages_array(
@@ -72,7 +72,7 @@ Return:
 '''
 async def handle_supporting_fact(user_id, update):
     # Step 1: Reinforce the supporting fact
-    knowledge_facts = fetchKnowledge(user_id)
+    knowledge_facts = fetchKnowledge(user_id, current_topic)
     knowledge_facts_string = convert_list_to_bullet_points(knowledge_facts)
 
     messages = prepare_messages_array(

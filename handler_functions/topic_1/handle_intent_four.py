@@ -24,7 +24,7 @@ Return:
     - No return value
 '''
 async def formulate_response_intent_four(user_id, update):
-    knowledge_facts = fetchKnowledge(user_id)
+    knowledge_facts = fetchKnowledge(user_id, current_topic)
     knowledge_facts_string = convert_list_to_bullet_points(knowledge_facts)
 
     
