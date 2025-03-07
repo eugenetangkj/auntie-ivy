@@ -1,10 +1,12 @@
 from prompts.topic_1_prompts import TOPIC_1_STAGE_1_INTENT_ONE_PROMPT, TOPIC_1_STAGE_1_INTENT_ONE_SUPPORT_PROMPT, TOPIC_1_STAGE_1_INTENT_ONE_SUPPORT_PROMPT_FOLLOW_UP, TOPIC_1_STAGE_1_INTENT_ONE_CONTRADICT_PROMPT
+from prompts.topic_1_prompts import TOPIC_1_STAGE_1_NEW_KNOWLEDGE_MESSAGES, TOPIC_1_STAGE_1_INTENT_ONE_NEW_PROMPT
 from services.openai_manager import generate_text_gpt
 from services.message_manager import prepare_messages_array, produce_text_or_voice_message
-from services.database_manager import fetchKnowledgeWithId, fetchKnowledge, fetchKnowledgeFactUsingId
+from services.database_manager import fetchKnowledgeWithId, fetchKnowledge, fetchKnowledgeFactUsingId, add_knowledge
 from services.helper_functions import convert_list_to_bullet_points
 import ast
 import re
+import random
 
 
 '''
@@ -52,10 +54,8 @@ async def formulate_response_intent_one(user_id, update):
         print("Contradict")
     else:
         # New fact
+        await handle_new_fact(user_id, update, fact)
         print("New fact")
-
-
-
 
 
 
@@ -132,3 +132,40 @@ async def handle_contradicting_fact(user_id, update, fact_id):
     message = response
 
     await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
+
+
+
+'''
+Helper function to carry out logic if the senior's information is something new and not found within the agent's
+existing knowledge. The agent will add the new fact into his knowledge base.
+
+Parameters:
+    - user_id: ID of the user
+    - update: Update frame from Telegram
+    - fact: The new fact to be added
+
+Return:
+    - No return value
+'''
+async def handle_new_fact(user_id, update, fact):
+    # Step 1: Add new fact into the knowledge base
+    add_knowledge(user_id, [fact])
+
+    # Step 2: Tell the user thanks for sharing the information
+    random_message = random.choice(TOPIC_1_STAGE_1_NEW_KNOWLEDGE_MESSAGES)
+    await produce_text_or_voice_message(user_id, random_message, current_topic, current_stage, update, True)
+    
+
+    # Step 3: Ask a question to follow up
+    messages = prepare_messages_array(
+        prompt=TOPIC_1_STAGE_1_INTENT_ONE_NEW_PROMPT.format(fact),
+        user_id=user_id,
+        lower_bound_topic=current_topic,
+        lower_bound_stage=current_stage,
+        upper_bound_topic=current_topic,
+        upper_bound_stage=current_stage
+    )
+    response = generate_text_gpt("gpt-4o", messages, 0)
+    message = response
+    await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
+

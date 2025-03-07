@@ -48,7 +48,7 @@ Classify the intent into one of the following four categories and output only th
 
 1. The senior provides information or facts on the topic of creating deepfakes, even if they use phrases like "I think" or "Maybe", "I guess". 
 2. The senior affirms that the knowledge they provided is correct.  
-3. The senior is stuck, or asking you a question related to how deepfakes are created.  
+3. The senior is clearly stuck such as saying "I am not sure", or asking you a question related to how deepfakes are created.  
 4. The senior's response does not match any of the above intents.  
 
 Only output the intent number (1, 2, 3, or 4) without any additional text.
@@ -74,7 +74,7 @@ You have limited knowledge and need to identify one relevant fact based on the s
 response should be in the format (ID, type) where:
 - ID is the identifier of the most relevant fact.
 - type can be one of the following:
-    1. support: If the senior's information aligns with one of your facts.
+    1. support: If the senior's information matches with one of your facts.
     2. contradict: If the senior's information condlicts with one of your facts.
     3. new: If, after reviewing all the knowledge facts, you cannot find any relevant fact. In this case,
        return -1 as the ID and include the new information as the type.
@@ -119,7 +119,7 @@ on your knowledge and what was discussed so far in order to continue the convers
 - Your question MUST revolve around HOW to create deepfakes.
 - Using only the knowledge that is provided in **your current knowledge**.
 - Keeping the tone friendly, curious and supportive.
-- Keep your question simple, and to a maximum of 1 sentences.
+- Keep your question simple, and to a maximum of 1 sentence.
 
 Remarks:
 - You **MUST ONLY** use the knowledge that is listed in your current knowledge. **Do not provide any information** that is not mentioned in your current knowledge.
@@ -148,7 +148,22 @@ Your knowledge fact: {}
 )
 
 
+TOPIC_1_STAGE_1_INTENT_ONE_NEW_PROMPT = PERSONA_PROMPT + '\n' + (
+'''
+You are talking to a senior via Telegram. Together, you and the senior are learning how deepfakes are created. The senior has just
+provided you with a new fact.
 
+Goal:
+You are trying to help both you and the senior form a better understanding of how deepfakes are created. Ask a question to the senior based
+on this new fact to continue the conversation.
+- Your question MUST revolve around the new fact and relate it to how deepfakes are created.
+- Keeping the tone friendly, curious and supportive.
+- Keep your question simple, and to a maximum of 1 sentence.
+
+
+The new fact: {}
+'''
+)
 
 
 
@@ -207,7 +222,11 @@ Your current knowledge: {}
 )
 
 
-
+TOPIC_1_STAGE_1_NEW_KNOWLEDGE_MESSAGES = [
+    "Thank you for sharing. I did not know about this before.",
+    "Thanks. This is something new to me.",
+    "I see. This is something new for me."
+]
 
 
 
