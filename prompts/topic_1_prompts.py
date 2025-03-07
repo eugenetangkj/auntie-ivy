@@ -1,9 +1,6 @@
 from prompts.common_prompts import PERSONA_PROMPT
-
-
 '''
-TOPIC 1 STAGE 1 KNOWLEDGE:
-The default knowledge that the peer agent has about how deepfakes are created.
+TOPIC 1 STAGE 1: Discussing how deepfakes are created
 '''
 TOPIC_1_STAGE_1_DEFAULT_KNOWLEDGE = [
     # Basic knowledge and facts that revolve around data collection and identifying patterns
@@ -16,31 +13,31 @@ TOPIC_1_STAGE_1_DEFAULT_KNOWLEDGE = [
     "Probably only those who are knowledgeable in AI can create them.",
 ]
 
-'''
-TOPIC 1 STAGE 1:
-Peer discusses with the learner about how are deepfakes created.
-'''
+
 TOPIC_1_STAGE_1_RELEVANCE_PROMPT = (
 '''
 You are talking to a senior via Telegram. The senior has just given a reply. Your task is to determine whether the reply makes sense and logically fits with the previous message in the conversation history. 
 
-You should only output either **'true'** or **'false'**.
+You should only output either **'true'** or **'false'**. Thus, your output is 1 single word. DO NOT return what the senior said, only return either **'true'** or **'false'**
 
 - If the reply is a reasonable and relevant response to the previous message, output **'true'**.
 - If the reply seems unrelated, out of place, or doesn't logically follow from the previous message, output **'false'**.
 
 A reply can be considered reasonable even if it expresses uncertainty or a lack of knowledge (e.g., "I'm not sure about it" or "I don't know"), as long as it is still a natural continuation of the conversation.
 
-For example:
+EXAMPLES:
 - If the previous message is "Can you help explain how deepfakes are created?" and the reply is "I'm not sure about it," output **'true'**.
 - If the reply is unrelated like "The sky is blue today," output **'false'**.
 
+REMARKS:
 **Strictly output only 'true' or 'false'. No other responses are allowed.**
 
+INFORMATION:
 The previous message is: {}
 The senior's reply is: {}
 '''
 )
+
 
 TOPIC_1_STAGE_1_INTENT_CLASSIFIER = (
 '''
@@ -49,7 +46,7 @@ Your task is to identify the intent of this last message.
 
 Classify the intent into one of the following four categories and output only the intent number (1, 2, 3, or 4):
 
-1. The senior provides information about how deepfakes are created, even if they use phrases like "I think" or "Maybe", "I guess". 
+1. The senior provides information or facts on the topic of creating deepfakes, even if they use phrases like "I think" or "Maybe", "I guess". 
 2. The senior affirms that the knowledge they provided is correct.  
 3. The senior is stuck, or asking you a question related to how deepfakes are created.  
 4. The senior's response does not match any of the above intents.  
@@ -58,6 +55,8 @@ Only output the intent number (1, 2, 3, or 4) without any additional text.
 
 For example:
 - "I think deepfakes uses generative adversarial network (GANs) -> 1
+- "It takes a lot of time to create deepfakes." -> 1
+- "We have to collect people's images, then use them in AI to replace the original faces." -> 1
 - "Can you explain how generative adversarial networks work?" -> 2
 - "I am not sure." -> 3
 '''
@@ -107,6 +106,49 @@ Remarks:
 Your current knowledge: {}
 '''
 )
+
+
+TOPIC_1_STAGE_1_INTENT_ONE_SUPPORT_PROMPT_FOLLOW_UP = PERSONA_PROMPT + '\n' + (
+'''
+You are talking to a senior via Telegram. Together, you and the senior are learning how deepfakes are created. However, you have limited knowledge
+on the topic yourself. You **MUST ONLY** respond using the current knowledge that you have.
+
+Goal:
+You are trying to help both you and the senior form a better understanding of how deepfakes are created. Ask a question to the senior based
+on your knowledge and what was discussed so far in order to continue the conversation.
+- Your question MUST revolve around HOW to create deepfakes.
+- Using only the knowledge that is provided in **your current knowledge**.
+- Keeping the tone friendly, curious and supportive.
+- Keep your question simple, and to a maximum of 1 sentences.
+
+Remarks:
+- You **MUST ONLY** use the knowledge that is listed in your current knowledge. **Do not provide any information** that is not mentioned in your current knowledge.
+- **Do not assume or add new information**. Only refer to facts in your current knowledge.
+- You do not need to use all your existing knowledge. Provide something relevant to the current conversation, just enough to get the conversation going.
+- Remember, you are learning with the senior, so focus on collaboration and discussion.
+
+Your current knowledge: {}
+'''
+)
+
+
+TOPIC_1_STAGE_1_INTENT_ONE_CONTRADICT_PROMPT = PERSONA_PROMPT + '\n' + (
+'''
+You are talking to a senior via Telegram. Together, you and the senior are learning how deepfakes are created. Look at the conversation history
+and focus on the senior's last message, which contains a piece of information about the process of creating deepfakes.
+
+Goal:
+The information provided by the senior contradicts with one of your existing knowledge facts. Your task is to ask the senior if he is sure about it,
+because given your understanding, it contradicts with what you know.
+- Keep your question simple, and to a maximum of 1 sentence.
+- Use only the knowledge fact that you have.
+
+Your knowledge fact: {}
+'''
+)
+
+
+
 
 
 

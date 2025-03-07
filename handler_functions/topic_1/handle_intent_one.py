@@ -1,7 +1,7 @@
-from prompts.topic_1_prompts import TOPIC_1_STAGE_1_INTENT_ONE_PROMPT, TOPIC_1_STAGE_1_INTENT_ONE_SUPPORT_PROMPT
+from prompts.topic_1_prompts import TOPIC_1_STAGE_1_INTENT_ONE_PROMPT, TOPIC_1_STAGE_1_INTENT_ONE_SUPPORT_PROMPT, TOPIC_1_STAGE_1_INTENT_ONE_SUPPORT_PROMPT_FOLLOW_UP, TOPIC_1_STAGE_1_INTENT_ONE_CONTRADICT_PROMPT
 from services.openai_manager import generate_text_gpt
 from services.message_manager import prepare_messages_array, produce_text_or_voice_message
-from services.database_manager import fetchKnowledgeWithId, fetchKnowledge
+from services.database_manager import fetchKnowledgeWithId, fetchKnowledge, fetchKnowledgeFactUsingId
 from services.helper_functions import convert_list_to_bullet_points
 import ast
 import re
@@ -48,6 +48,7 @@ async def formulate_response_intent_one(user_id, update):
         await handle_supporting_fact(user_id, update)
         print("Support")
     elif fact == "contradict":
+        await handle_contradicting_fact(user_id, update, fact_id)
         print("Contradict")
     else:
         # New fact
@@ -70,11 +71,10 @@ Return:
     - No return value
 '''
 async def handle_supporting_fact(user_id, update):
+    # Step 1: Reinforce the supporting fact
     knowledge_facts = fetchKnowledge(user_id)
     knowledge_facts_string = convert_list_to_bullet_points(knowledge_facts)
 
-    
-    
     messages = prepare_messages_array(
         prompt=TOPIC_1_STAGE_1_INTENT_ONE_SUPPORT_PROMPT.format(knowledge_facts_string),
         user_id=user_id,
@@ -83,11 +83,52 @@ async def handle_supporting_fact(user_id, update):
         upper_bound_topic=current_topic,
         upper_bound_stage=current_stage
     )
-
-    # Use OpenAI chat completion
     response = generate_text_gpt("gpt-4o", messages, 0)
     message = response
 
-    # Produce output and save to the database
     await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
 
+
+    # Step 2: Ask follow-up question to continue the conversation
+    messages = prepare_messages_array(
+        prompt=TOPIC_1_STAGE_1_INTENT_ONE_SUPPORT_PROMPT_FOLLOW_UP.format(knowledge_facts_string),
+        user_id=user_id,
+        lower_bound_topic=current_topic,
+        lower_bound_stage=current_stage,
+        upper_bound_topic=current_topic,
+        upper_bound_stage=current_stage
+    )
+    response = generate_text_gpt("gpt-4o", messages, 0)
+    message = response
+
+    await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
+
+
+'''
+Helper function to carry out logic if the senior's information contradicts the agent's existing knowledge.
+If so, the agent will ask the senior if he is sure as it contradicts his information.
+
+Parameters:
+    - user_id: ID of the user
+    - update: Update frame from Telegram
+    - fact_id: ID of the agent's fact that the senior has contradicted.
+
+Return:
+    - No return value
+'''
+async def handle_contradicting_fact(user_id, update, fact_id):
+    # Ask the senior if he is sure about it
+    knowledge = fetchKnowledgeFactUsingId(user_id, fact_id)
+
+    messages = prepare_messages_array(
+        prompt=TOPIC_1_STAGE_1_INTENT_ONE_CONTRADICT_PROMPT.format(knowledge),
+        user_id=user_id,
+        lower_bound_topic=current_topic,
+        lower_bound_stage=current_stage,
+        upper_bound_topic=current_topic,
+        upper_bound_stage=current_stage
+    )
+    response = generate_text_gpt("gpt-4o", messages, 0)
+    message = response
+
+    await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)

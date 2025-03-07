@@ -472,3 +472,33 @@ def fetchKnowledgeWithId(user_id):
     except Exception as e:
         print(f"Error fetching knowledge: {e}")
         return []
+
+
+
+'''
+Retrieves a given knowledge fact.
+
+Parameters:
+    - user_id: ID of the user
+    - fact_id: ID of the fact to fetch
+
+Returns:
+    - The given knowledge fact
+
+'''
+def fetchKnowledgeFactUsingId(user_id, fact_id):
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Execute query to fetch the fact that matches the given user_id and fact_id
+    cursor.execute("SELECT fact FROM knowledge WHERE user_id = %s AND id = %s", (user_id, fact_id))
+    
+    # Fetch the matching row
+    row = cursor.fetchone()
+    
+    # Close the connection
+    conn.close()
+    
+    # Return the fact if found, else None
+    return row[0] if row else None

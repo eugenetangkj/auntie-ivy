@@ -25,14 +25,24 @@ def determine_if_answer_is_relevant(user_id, user_message):
     previous_message = fetchLatestMessage(user_id, current_topic, current_stage, current_topic, current_stage)
 
 
-    messages = prepare_messages_array(
-        prompt=TOPIC_1_STAGE_1_RELEVANCE_PROMPT.format(previous_message, user_message),
-        user_id=user_id,
-        lower_bound_topic=current_topic,
-        lower_bound_stage=current_stage,
-        upper_bound_topic=current_topic,
-        upper_bound_stage=current_stage
-    )
+    # Generate the prompt
+    prompt = TOPIC_1_STAGE_1_RELEVANCE_PROMPT.format(previous_message, user_message)
+    messages = [
+        {
+            "role": "developer",
+            "content": prompt
+        }
+    ]
+
+
+    # messages = prepare_messages_array(
+    #     prompt=TOPIC_1_STAGE_1_RELEVANCE_PROMPT.format(previous_message, user_message),
+    #     user_id=user_id,
+    #     lower_bound_topic=current_topic,
+    #     lower_bound_stage=current_stage,
+    #     upper_bound_topic=current_topic,
+    #     upper_bound_stage=current_stage
+    # )
 
     # Use OpenAI chat completion
     response = generate_text_gpt("gpt-4o", messages, 0)
