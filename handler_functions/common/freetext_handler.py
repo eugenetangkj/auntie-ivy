@@ -47,7 +47,6 @@ async def reply_to_user_message(update: Update, user_id: int, user_message: str)
 
     if (current_topic == 1):
         # TOPIC 1: How is a deepfake created
-        saveMessageToConversationHistory(user_id, Role.USER, user_message, current_topic, current_stage)
-        await handle_topic_one_stage_one(user_id, update)
+        await handle_topic_one_stage_one(user_id, update, user_message)
     else:
         await update.message.reply_text("We are still constructing this part of the conversational flow.")
