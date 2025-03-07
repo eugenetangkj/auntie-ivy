@@ -2,7 +2,7 @@ from prompts.topic_1_prompts import TOPIC_1_STAGE_1_INTENT_ONE_PROMPT, TOPIC_1_S
 from prompts.topic_1_prompts import TOPIC_1_STAGE_1_NEW_KNOWLEDGE_MESSAGES, TOPIC_1_STAGE_1_INTENT_ONE_NEW_PROMPT
 from services.openai_manager import generate_text_gpt
 from services.message_manager import prepare_messages_array, produce_text_or_voice_message
-from services.database_manager import fetchKnowledgeWithId, fetchKnowledge, fetchKnowledgeFactUsingId, add_knowledge
+from services.database_manager import fetchKnowledgeWithId, fetchKnowledge, fetchKnowledgeFactUsingId, add_knowledge, add_contradicting_fact
 from services.helper_functions import convert_list_to_bullet_points
 import ast
 import re
@@ -117,7 +117,10 @@ Return:
     - No return value
 '''
 async def handle_contradicting_fact(user_id, update, fact_id):
-    # Ask the senior if he is sure about it
+    # Step 1: Add the contradicting fact into the database
+    add_contradicting_fact(user_id, fact_id)
+
+    # Step 2: Ask the senior if he is sure about it
     knowledge = fetchKnowledgeFactUsingId(user_id, fact_id)
 
     messages = prepare_messages_array(
@@ -130,7 +133,6 @@ async def handle_contradicting_fact(user_id, update, fact_id):
     )
     response = generate_text_gpt("gpt-4o", messages, 0)
     message = response
-
     await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
 
 

@@ -5,6 +5,7 @@ from definitions.role import Role
 from handler_functions.topic_1.determine_relevance import determine_if_answer_is_relevant
 from handler_functions.topic_1.intent_classifier import determine_intent
 from handler_functions.topic_1.handle_intent_one import formulate_response_intent_one
+from handler_functions.topic_1.handle_intent_two import formulate_response_intent_two
 from handler_functions.topic_1.handle_intent_three import formulate_response_intent_three
 from handler_functions.topic_1.handle_intent_four import formulate_response_intent_four
 
@@ -53,39 +54,14 @@ async def handle_topic_one_stage_one(user_id: int, update: Update, user_message:
 
 
     if (intent_number == 1):
-        await formulate_response_intent_one(user_id, update)
         print(1)
+        await formulate_response_intent_one(user_id, update)
     elif (intent_number == 2):
         print(2)
+        await formulate_response_intent_two(user_id, update)
     elif (intent_number == 3):
         print(3)
         await formulate_response_intent_three(user_id, update)
     else:
         print(4)
         await formulate_response_intent_four(user_id, update)
-
-
-
-    # # Fetch only messages in the current topic and stage
-    # messages = prepare_messages_array(
-    #     prompt=TOPIC_1_STAGE_1_PROMPT,
-    #     user_id=user_id,
-    #     lower_bound_topic=current_topic,
-    #     lower_bound_stage=current_stage,
-    #     upper_bound_topic=current_topic,
-    #     upper_bound_stage=current_stage
-    # )
-
-
-    # # Use OpenAI chat completion
-    # response = generate_text_gpt("gpt-4o", messages, 0)
-    # message = response
-   
-
-    # # Output based on whether the user has enabled audio output
-    # if (determine_is_audio_enabled(user_id)):
-    #     # Case 1: Audio is enabled. We need to output audio message and save the message into the database.
-    #     await produce_voice_message(user_id, message, current_topic, current_stage, update)
-    # else:
-    #     # Case 2: Audio is disabled. We need to output text message and save the message into the database.
-    #     await output_and_save_text_message(user_id, message, current_topic, current_stage, update)

@@ -18,16 +18,16 @@ TOPIC_1_STAGE_1_RELEVANCE_PROMPT = (
 '''
 You are talking to a senior via Telegram. The senior has just given a reply. Your task is to determine whether the reply makes sense and logically fits with the previous message in the conversation history. 
 
-You should only output either **'true'** or **'false'**. Thus, your output is 1 single word. DO NOT return what the senior said, only return either **'true'** or **'false'**
+You should only output either 'true' or 'false'. Thus, your output is 1 single word. DO NOT return what the senior said, only return either 'true' or 'false'.
 
-- If the reply is a reasonable and relevant response to the previous message, output **'true'**.
-- If the reply seems unrelated, out of place, or doesn't logically follow from the previous message, output **'false'**.
+- If the reply is a reasonable and relevant response to the previous message, output 'true'.
+- If the reply seems unrelated, out of place, or doesn't logically follow from the previous message, output 'false'.
 
 A reply can be considered reasonable even if it expresses uncertainty or a lack of knowledge (e.g., "I'm not sure about it" or "I don't know"), as long as it is still a natural continuation of the conversation.
 
 EXAMPLES:
-- If the previous message is "Can you help explain how deepfakes are created?" and the reply is "I'm not sure about it," output **'true'**.
-- If the reply is unrelated like "The sky is blue today," output **'false'**.
+- If the previous message is "Can you help explain how deepfakes are created?" and the reply is "I'm not sure about it," output 'true'.
+- If the reply is unrelated like "The sky is blue today," output 'false'.
 
 REMARKS:
 **Strictly output only 'true' or 'false'. No other responses are allowed.**
@@ -47,7 +47,7 @@ Your task is to identify the intent of this last message.
 Classify the intent into one of the following four categories and output only the intent number (1, 2, 3, or 4):
 
 1. The senior provides information or facts on the topic of creating deepfakes, even if they use phrases like "I think" or "Maybe", "I guess". 
-2. The senior affirms that the knowledge they provided is correct.  
+2. The senior was asked if he is sure that his knowledge is correct, and the senior affirms that the knowledge he provided is correct.  
 3. The senior is clearly stuck such as saying "I am not sure", or asking you a question related to how deepfakes are created.  
 4. The senior's response does not match any of the above intents.  
 
@@ -166,6 +166,23 @@ The new fact: {}
 )
 
 
+TOPIC_1_STAGE_1_INTENT_TWO_PROMPT_ONE = PERSONA_PROMPT + '\n' + (
+'''
+You are talking to a senior via Telegram. Together, you and the senior are learning how deepfakes are created. Look at the conversation history
+and focus on the last few messages, where the senior has affirmed that a piece of information he provided is correct, although it contradicts
+with what you already know.
+
+Goal:
+Return the information or the fact that the senior insists is correct. You may combine information across messages if the senior's information spans across more than
+one message. JUST return the fact which is related to how deepfakes are created.
+'''
+)
+
+TOPIC_1_STAGE_1_INTENT_TWO_MESSAGES = [
+    "Ok. Thank you for clarifying.",
+    "I see, I did not know that."
+]
+
 
 
 
@@ -181,6 +198,7 @@ You are trying to help both you and the senior form a better understanding of ho
 - Sparking further discussion or asking questions to help uncover more about the process.
 - Keeping responses simple, and to a maximum of 2 sentences.
 - If the senior asks a question that you **DO NOT** have the knowledge to answer, reply by saying "I am not sure" and ask for their thoughts instead.
+- Keep the topic focused on HOW deepfakes are created.
 
 **Important Notes:**
 - You **MUST ONLY** use the knowledge that is listed in your current knowledge. **Do not provide any information** that is not mentioned in your current knowledge.
@@ -189,6 +207,7 @@ You are trying to help both you and the senior form a better understanding of ho
 - You do not need to use all your existing knowledge. Share only what is relevant to the current conversation, just enough to keep the discussion going.
 - Since you are learning with the senior, focus on collaboration and discussion.
 - When sharing your knowledge, use natural phrases like "Yeah, that matches what I know" or "From what I know, that sounds right."  
+- Keep the topic focused on HOW deepfakes are created.
 
 
 Your current knowledge: {}

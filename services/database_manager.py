@@ -502,3 +502,122 @@ def fetchKnowledgeFactUsingId(user_id, fact_id):
     
     # Return the fact if found, else None
     return row[0] if row else None
+
+'''
+Updates a given knowledge fact.
+
+Parameters:
+    - user_id: ID of the user
+    - fact_id: ID of the knowledge fact in the knowledge table which is to be updated
+    - new_fact: New fact that is to be used
+'''
+def updateKnowledgeFactUsingId(user_id, fact_id, new_fact):
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Update the fact field in the knowledge table with the new fact, and the date updated to the the current datetime
+    cursor.execute("""
+    UPDATE knowledge
+    SET fact = %s, date_updated = CURRENT_TIMESTAMP
+    WHERE user_id = %s AND id = %s
+    """, (new_fact, user_id, fact_id))
+
+    # Commit the transaction to save changes
+    conn.commit()
+
+    # Close the connection
+    cursor.close()
+    conn.close()
+
+
+'''
+Add a contradicting fact
+
+Parameters:
+    - user_id: ID of the user in the users table
+    - fact_id: ID of the contradicting fact in the facts table
+
+Returns:
+    - No return value
+'''
+def add_contradicting_fact(user_id, fact_id):
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Add the contradicting fact
+    cursor.execute("""
+    INSERT INTO contradicting_facts (user_id, fact_id)
+    VALUES (%s, %s)
+    """, (user_id, fact_id))
+
+    # Commit the transaction to make sure the insert is saved in the database
+    conn.commit()
+
+    # Close the connection
+    cursor.close()
+    conn.close()
+
+
+'''
+Retrieve the ID of the contradicting fact for a given user
+
+Parameters:
+    - user_id: ID of the user in the users table
+
+Returns:
+    - The id of the contradicting fact
+'''
+def retrieve_id_of_contradicting_fact(user_id):
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Fetch ID of the contradicting fact from the contradicting facts table
+    cursor.execute("""
+    SELECT fact_id 
+    FROM contradicting_facts 
+    WHERE user_id = %s
+    """, (user_id,))
+
+    # Fetch the result
+    result = cursor.fetchone()
+
+    # Close the connection
+    cursor.close()
+    conn.close()
+
+    # If no contradicting fact is found, return None
+    if result:
+        return result[0]
+    else:
+        return None
+
+
+'''
+Removes the contradicting fact for a given user
+
+Parameters:
+    - user_id: ID of the user in the users table
+
+Returns:
+    - No return value
+'''
+def remove_contradicting_facts_for_user(user_id):
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Remove all contradicting facts associated with the user
+    cursor.execute("""
+    DELETE FROM contradicting_facts
+    WHERE user_id = %s
+    """, (user_id,))
+
+    # Commit the transaction
+    conn.commit()
+
+    # Close the connection
+    cursor.close()
+    conn.close()

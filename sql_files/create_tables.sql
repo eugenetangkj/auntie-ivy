@@ -27,3 +27,16 @@ CREATE TABLE knowledge (
     -- Cascading deletion where if a user is deleted, all the knowledge with the user will be cleared as well
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+CREATE TABLE contradicting_facts (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    fact_id INT NOT NULL,
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    -- Foreign key reference to the users table
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    
+    -- Foreign key reference to the knowledge table
+    FOREIGN KEY (fact_id) REFERENCES knowledge(id) ON DELETE CASCADE
+);
