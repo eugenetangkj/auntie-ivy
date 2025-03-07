@@ -42,7 +42,7 @@ async def formulate_response_intent_one(user_id, update):
 
     # Use OpenAI chat completion
     response = generate_text_gpt("gpt-4o", messages, 0)
-    response_formatted = re.sub(r'\((\d+),\s*(.*)\)', r'(\1, "\2")', response)
+    response_formatted = re.sub(r'\((\d+),\s*([^\)]*)\)', r'(\1, "\2")', response)
     fact_id, fact = ast.literal_eval(response_formatted)
 
     # Handle cases
