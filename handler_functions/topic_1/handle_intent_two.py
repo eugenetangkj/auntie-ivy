@@ -33,7 +33,7 @@ async def formulate_response_intent_two(user_id, update):
         upper_bound_topic=current_topic,
         upper_bound_stage=current_stage
     )
-    response = generate_text_gpt("gpt-4o", messages, 1)
+    response = generate_text_gpt("gpt-4o", messages, 0)
     new_fact = response
 
 
@@ -59,7 +59,7 @@ async def formulate_response_intent_two(user_id, update):
         upper_bound_topic=current_topic,
         upper_bound_stage=current_stage
     )
-    response = generate_text_gpt("gpt-4o", messages, 0)
+    response = generate_text_gpt("gpt-4o", messages, 1)
     message = response
     await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
 

@@ -1,6 +1,7 @@
 from services.database_manager import saveMessageToConversationHistory
 from telegram import Update
-from services.message_manager import produce_text_or_voice_message
+from services.message_manager import produce_text_or_voice_message, prepare_messages_array
+from services.openai_manager import generate_text_gpt
 from definitions.role import Role
 from handler_functions.topic_1.determine_relevance import determine_if_answer_is_relevant
 from handler_functions.topic_1.intent_classifier import determine_intent
@@ -8,6 +9,7 @@ from handler_functions.topic_1.handle_intent_one import formulate_response_inten
 from handler_functions.topic_1.handle_intent_two import formulate_response_intent_two
 from handler_functions.topic_1.handle_intent_three import formulate_response_intent_three
 from handler_functions.topic_1.handle_intent_four import formulate_response_intent_four
+from prompts.topic_3_prompts import TOPIC_3_STAGE_1_PROMPT
 
 
 '''
@@ -30,7 +32,52 @@ Returns:
     - No return value
 '''
 async def handle_topic_three_stage_one(user_id: int, update: Update, user_message: str):
-    # Pass through the AI chain to determine how to handle the response
+    messages = prepare_messages_array(
+        prompt=TOPIC_3_STAGE_1_PROMPT,
+        user_id=user_id,
+        lower_bound_topic=current_topic,
+        lower_bound_stage=current_stage,
+        upper_bound_topic=current_topic,
+        upper_bound_stage=current_stage
+    )
+
+
+
+    response = generate_text_gpt("gpt-4o", messages, 1)
+    message = response
+    await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
 
     # STEP 1: Determine if the user answered something relevant to the conversation
     did_user_give_a_relevant_answer = determine_if_answer_is_relevant(user_id, user_message)

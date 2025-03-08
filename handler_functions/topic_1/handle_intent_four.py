@@ -39,7 +39,7 @@ async def formulate_response_intent_four(user_id, update):
     )
 
     # Use OpenAI chat completion
-    response = generate_text_gpt("gpt-4o", messages, 0)
+    response = generate_text_gpt("gpt-4o", messages, 1)
     message = response
 
 

@@ -167,7 +167,7 @@ async def handle_new_fact(user_id, update, fact):
         upper_bound_topic=current_topic,
         upper_bound_stage=current_stage
     )
-    response = generate_text_gpt("gpt-4o", messages, 0)
+    response = generate_text_gpt("gpt-4o", messages, 1)
     message = response
     await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
 
