@@ -2,10 +2,10 @@ from services.database_manager import saveMessageToConversationHistory, add_know
 from telegram import Update
 from services.message_manager import produce_text_or_voice_message
 from definitions.role import Role
-from handler_functions.topic_2.stage_two.relevance_classifier import determine_relevance
-from handler_functions.topic_2.stage_two.message_analyser import analyse_message
-from handler_functions.topic_2.stage_two.tip_checker import check_tip_in_knowledge_base
-from handler_functions.topic_2.stage_two.discussion_handler import handle_discussion
+from handler_functions.topic_2.stage_three.relevance_classifier import determine_relevance
+from handler_functions.topic_2.stage_three.message_analyser import analyse_message
+from handler_functions.topic_2.stage_three.tip_checker import check_tip_in_knowledge_base
+from handler_functions.topic_2.stage_three.discussion_handler import handle_discussion
 
 '''
 Properties

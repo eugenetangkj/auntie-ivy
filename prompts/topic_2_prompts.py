@@ -132,4 +132,36 @@ TOPIC_2_STAGE_2_TRANSITION_PROMPT_TWO =  "What other ways do you think we can us
 '''
 TOPIC 2 STAGE 3: General discussion on how to spot deepfakes
 '''
-TOPIC_2_STAGE_3_PROMPT = ""
+TOPIC_2_STAGE_3_RELEVANCE_CLASSIFIER_PROMPT = (
+'''
+You are talking to a senior via Telegram. Look at the conversation history and focus on the last message provided by the senior.
+For context, you are discussing with the senior how to spot a deepfake.
+
+Your task:
+Determine the intent of the senior's last message based on the following categories and output only the
+intent number (1 or 2).
+
+1. The senior's response is completely unrelated or does not logically fit with the current conversation.
+2. The senior's response could possibly be related or logically fit with the current conversation.
+
+Remarks:
+- Only output the intent number (1 or 2) without any additional text.
+'''
+)
+
+TOPIC_2_STAGE_3_DISCUSSION_PROMPT = PERSONA_PROMPT + '\n' + (
+'''
+You are talking to a senior via Telegram. You are discussing about how to spot a deepfake.
+
+GOAL:
+Invite to the senior to share his perspectives on how to spot a deepfake.
+1. If the senior shares a sign that is useful to spot a deepfake, respond positively and reaffirm it.
+2. Discuss about the sign that is shared by the senior.
+2. Encourage the senior to share more signs that he know regarding how to spot a deepfake.
+
+REMARKS:
+- Keeping the tone friendly, curious and supportive.
+- Encourage the senior to share signs he used to spot the deepfake.
+- Keep responses simple, and to a maximum of 2 sentences.
+'''
+)

@@ -26,7 +26,7 @@ async def handle_discussion(user_id, update):
     # Obtain knowledge
     knowledge_facts_string = convert_list_to_bullet_points(TOPIC_2_DEFAULT_KNOWLEDGE)
 
-    # Prepare tip knowledge checker
+    # Prepare discussion handler
     messages = prepare_messages_array(
         prompt=TOPIC_2_STAGE_2_DISCUSSION_PROMPT.format(knowledge_facts_string),
         user_id=user_id,
