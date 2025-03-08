@@ -45,7 +45,7 @@ Determine the intent of the senior's last message based on the following categor
 intent number (1 or 2).
 
 1. The senior's response is completely unrelated or does not logically fit with the current conversation.
-2. The senior's response revolves around the deepfake video of Singapore DPM Lawrence Wong.
+2. The senior's response could possibly be related or logically fit with the current conversation.
 
 Remarks:
 - Only output the intent number (1 or 2) without any additional text.
@@ -75,6 +75,7 @@ Senior's last message: {}
 '''
 )
 
+
 TOPIC_2_STAGE_2_CHECK_TIP_EXIST_PROMPT = (
 '''
 Goal:
@@ -98,7 +99,7 @@ Your existing knowledge: {}
 )
 
 
-TOPIC_2_STAGE_2_DISCUSSION_PROMPT = (
+TOPIC_2_STAGE_2_DISCUSSION_PROMPT = PERSONA_PROMPT + '\n' + (
 '''
 You are talking to a senior via Telegram. You have just shown him a deepfake video of Deputy Prime Minister Lawrence Wong falsely advocating for an
 investment scam.
@@ -107,10 +108,11 @@ GOAL:
 Discuss the signs that indicate the video is a deepfake.
 1. If the senior shares a sign that helped him identify the video as a deepfake, respond positively and reaffirm it.
 2. Encourage the senior to share more signs he used to spot the deepfake.
-3. If the senior is not providing any tips, refer to the conversation history. You have certain tips to cover which
+3. If the senior is not providing any tips after several encouragements, refer to the conversation history. You have certain tips to cover which
 are based on the tips you used to identify the video as a deepfake.
 - Ensure that all the tips under 'Tips to Cover' are discussed.
-- If any tip has not been mentioned, share it with the senior by saying it was something you used to spot the deepfake.
+- If any tip has not been mentioned, share it with the senior by saying it was something you used to spot the deepfake. Do not just tell the tip, but
+  rather discuss it with the senior. Share with him, ask him what he thinks.
 4. If the conversation about the video seems to have ended and all your tips have been covered, return only the word 'done' and nothing else.
 
 REMARKS:
