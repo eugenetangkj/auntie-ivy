@@ -52,7 +52,7 @@ async def handle_topic_two_stage_two(user_id: int, update: Update, user_message:
 
     # STEP 4: Analyse the message to determine if it is related to a way of spotting deepfakes
     analysed_message = analyse_message(user_id, user_message)
-
+    print(analysed_message)
 
     # STEP 5:
     if (analysed_message.lower() != 'discussion'):

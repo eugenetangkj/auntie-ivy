@@ -44,7 +44,7 @@ async def handle_discussion(user_id, update):
     # Produce output
     if (message == 'done'):
         # Discussion has ended, move onto the next stage
-        updateUserTopicAndStage(current_topic, current_stage + 1)
+        updateUserTopicAndStage(user_id, current_topic, current_stage + 1)
         await produce_text_or_voice_message(user_id, TOPIC_2_STAGE_2_TRANSITION_PROMPT_ONE, current_topic, current_stage + 1, update, True)
         await produce_text_or_voice_message(user_id, TOPIC_2_STAGE_2_TRANSITION_PROMPT_TWO, current_topic, current_stage + 1, update, True)
     else:
