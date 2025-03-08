@@ -6,6 +6,7 @@ from definitions.role import Role
 from handler_functions.topic_2.stage_two.relevance_classifier import determine_relevance
 from handler_functions.topic_2.stage_two.message_analyser import analyse_message
 from handler_functions.topic_2.stage_two.tip_checker import check_tip_in_knowledge_base
+from handler_functions.topic_2.stage_two.discussion_handler import handle_discussion
 
 '''
 Properties
@@ -53,7 +54,6 @@ async def handle_topic_two_stage_two(user_id: int, update: Update, user_message:
 
     # STEP 3: Analyse the message to determine if it is related to a way of spotting deepfakes
     analysed_message = analyse_message(user_id, user_message)
-    print(analysed_message)
 
 
     # STEP 4:
@@ -67,7 +67,8 @@ async def handle_topic_two_stage_two(user_id: int, update: Update, user_message:
     
 
     # STEP 5: Continue discussion on how to spot deepfakes
-    
+    await handle_discussion(user_id, update)
+
 
 
 
