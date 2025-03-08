@@ -28,9 +28,11 @@ START_COMMAND_MESSAGES_TOPIC_2 = (
     "What do you think of the video?"
 )
 
-# Start message for topic 3
-START_COMMAND_MESSAGE_TOPIC_3 = (
-    "Hi {}. I am Assistant Ivy. I am here to answer your questions about the benefits and harms of deepfakes. Please feel free to ask me any questions. 😊"
+# Start messages for topic 3
+START_COMMAND_MESSAGE_TOPIC_3_ONE = "Hi {}. This is Auntie Ivy. Let's discuss about the benefits and harms of deepfakes."
+START_COMMAND_MESSAGES_TOPIC_3_TWO = (
+    "We can first talk about deepfakes that cause fake news. Nowadays, got so many deepfakes on social media like Facebook and WhatsApp. I think it is very dangerous for us seniors.",
+    "Personally, I feel that using deepfakes for fake news is bad. What do you think?"
 )
 
 

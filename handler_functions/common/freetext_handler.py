@@ -6,6 +6,7 @@ from handler_functions.topic_1.topic_one_stage_one import handle_topic_one_stage
 from handler_functions.topic_2.stage_one.topic_two_stage_one import handle_topic_two_stage_one
 from handler_functions.topic_2.stage_two.topic_two_stage_two import handle_topic_two_stage_two
 from handler_functions.topic_2.stage_three.topic_two_stage_three import handle_topic_two_stage_three
+from handler_functions.topic_3.stage_one.topic_three_stage_one import handle_topic_three_stage_one
 
 '''
 Handler function for free text messages that the user sends. It determines which topic
@@ -57,5 +58,9 @@ async def reply_to_user_message(update: Update, user_id: int, user_message: str)
             await handle_topic_two_stage_two(user_id, update, user_message)
         else:
             await handle_topic_two_stage_three(user_id, update, user_message)
+    elif (current_topic == 3):
+        # TOPIC 3: What are the benefits and harms of deepfakes
+        if (current_stage == 1):
+            await handle_topic_three_stage_one(user_id, update, user_message)
     else:
         await update.message.reply_text("We are still constructing this part of the conversational flow.")

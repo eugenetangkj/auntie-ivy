@@ -1,4 +1,4 @@
-from prompts.common_prompts import START_COMMAND_MESSAGE_TOPIC_1, START_COMMAND_MESSAGES_TOPIC_2, START_COMMAND_MESSAGE_TOPIC_3
+from prompts.common_prompts import START_COMMAND_MESSAGE_TOPIC_1, START_COMMAND_MESSAGES_TOPIC_2, START_COMMAND_MESSAGE_TOPIC_3_ONE, START_COMMAND_MESSAGES_TOPIC_3_TWO
 from telegram import Update
 from telegram.ext import CallbackContext
 from services.database_manager import check_if_user_exist, add_user, determineUserTopic, updateUserTopicAndStage, add_knowledge, saveMessageToConversationHistory
@@ -39,16 +39,21 @@ async def handle_start(update: Update, _: CallbackContext):
         add_knowledge(user_id, TOPIC_1_STAGE_1_DEFAULT_KNOWLEDGE, topic)
         start_message = START_COMMAND_MESSAGE_TOPIC_1.format(user_name)
         saveMessageToConversationHistory(user_id, Role.SYSTEM, start_message, topic, 1)
-        await update.message.reply_text(start_message.format(user_name))
+        await update.message.reply_text(start_message)
 
     elif topic == 2:
         add_knowledge(user_id, TOPIC_2_DEFAULT_KNOWLEDGE, topic)
 
         for start_message in START_COMMAND_MESSAGES_TOPIC_2:
             saveMessageToConversationHistory(user_id, Role.SYSTEM, start_message, topic, 1)
-            await update.message.reply_text(start_message.format(user_name))
+            await update.message.reply_text(start_message)
 
     elif topic == 3:
-        start_message = START_COMMAND_MESSAGE_TOPIC_3 
-        saveMessageToConversationHistory(user_id, Role.SYSTEM, start_message, topic, 1) # Always start at stage 1   
-        await update.message.reply_text(start_message.format(user_name))
+        start_message = START_COMMAND_MESSAGE_TOPIC_3_ONE.format(user_name)
+        saveMessageToConversationHistory(user_id, Role.SYSTEM, start_message, topic, 1)
+        await update.message.reply_text(start_message)
+
+
+        for start_message in START_COMMAND_MESSAGES_TOPIC_3_TWO:
+            saveMessageToConversationHistory(user_id, Role.SYSTEM, start_message, topic, 1)
+            await update.message.reply_text(start_message)
