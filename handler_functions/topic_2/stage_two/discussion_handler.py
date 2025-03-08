@@ -1,6 +1,7 @@
-from prompts.topic_2_prompts import TOPIC_2_DEFAULT_KNOWLEDGE, TOPIC_2_STAGE_2_DISCUSSION_PROMPT
+from prompts.topic_2_prompts import TOPIC_2_DEFAULT_KNOWLEDGE, TOPIC_2_STAGE_2_DISCUSSION_PROMPT, TOPIC_2_STAGE_2_TRANSITION_PROMPT_ONE, TOPIC_2_STAGE_2_TRANSITION_PROMPT_TWO
 from services.openai_manager import generate_text_gpt
 from services.message_manager import prepare_messages_array, produce_text_or_voice_message
+from services.database_manager import updateUserTopicAndStage
 from services.helper_functions import convert_list_to_bullet_points
 
 
@@ -41,5 +42,12 @@ async def handle_discussion(user_id, update):
 
 
     # Produce output
-    await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
+    if (message == 'done'):
+        # Discussion has ended, move onto the next stage
+        updateUserTopicAndStage(current_topic, current_stage + 1)
+        await produce_text_or_voice_message(user_id, TOPIC_2_STAGE_2_TRANSITION_PROMPT_ONE, current_topic, current_stage + 1, update, True)
+        await produce_text_or_voice_message(user_id, TOPIC_2_STAGE_2_TRANSITION_PROMPT_TWO, current_topic, current_stage + 1, update, True)
+    else:
+        # Discussion has not ended, continue discussing about it
+        await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
 

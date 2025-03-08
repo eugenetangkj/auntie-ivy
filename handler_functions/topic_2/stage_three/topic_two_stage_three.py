@@ -11,12 +11,12 @@ from handler_functions.topic_2.stage_two.discussion_handler import handle_discus
 Properties
 '''
 current_topic = 2
-current_stage = 2
+current_stage = 3
 
 
 '''
-Determines how the agent should reply to the user in Topic 2 Stage 2, which is about discussing
-how to spot signs of deepfake regarding the deepfake video on DPM Lawrence Wong
+Determines how the agent should reply to the user in Topic 2 Stage 3, which is about a general
+discussion on how to spot deepfakes.
 
 Parameters:
     - user_id: User id of the user
@@ -26,12 +26,12 @@ Parameters:
 Returns:
     - No return value
 '''
-async def handle_topic_two_stage_two(user_id: int, update: Update, user_message: str):
+async def handle_topic_two_stage_three(user_id: int, update: Update, user_message: str):
     # STEP 1: Save the user message
     saveMessageToConversationHistory(user_id, Role.USER, user_message, current_topic, current_stage)
 
 
-    # STEP 2: Determine relevance
+    # STEP 1: Determine relevance
     intent = determine_relevance(user_id)
     if (intent == 1):
         # Not relevant
@@ -46,15 +46,15 @@ async def handle_topic_two_stage_two(user_id: int, update: Update, user_message:
         return
     
 
-    # STEP 3: Message is relevant, we save it to the conversation history
+    # STEP 2: Message is relevant, we save it to the conversation history
     saveMessageToConversationHistory(user_id, Role.USER, user_message, current_topic, current_stage)
 
 
-    # STEP 4: Analyse the message to determine if it is related to a way of spotting deepfakes
+    # STEP 3: Analyse the message to determine if it is related to a way of spotting deepfakes
     analysed_message = analyse_message(user_id, user_message)
 
 
-    # STEP 5:
+    # STEP 4:
     if (analysed_message.lower() != 'discussion'):
         # It is a tip on spotting deepfakes
         fact_status = check_tip_in_knowledge_base(user_id, analysed_message)
@@ -64,5 +64,5 @@ async def handle_topic_two_stage_two(user_id: int, update: Update, user_message:
             add_knowledge(user_id, [analysed_message], current_topic)
     
 
-    # STEP 6: Continue discussion on how to spot deepfakes
+    # STEP 5: Continue discussion on how to spot deepfakes
     await handle_discussion(user_id, update)

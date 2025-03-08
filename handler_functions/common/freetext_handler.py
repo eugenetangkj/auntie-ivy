@@ -1,10 +1,11 @@
 from prompts.common_prompts import REQUEST_TO_DELETE_MESSAGE
 from telegram import Update
 from telegram.ext import CallbackContext
-from services.database_manager import determineUserTopicAndStage, saveMessageToConversationHistory
+from services.database_manager import determineUserTopicAndStage
 from handler_functions.topic_1.topic_one_stage_one import handle_topic_one_stage_one
 from handler_functions.topic_2.stage_one.topic_two_stage_one import handle_topic_two_stage_one
 from handler_functions.topic_2.stage_two.topic_two_stage_two import handle_topic_two_stage_two
+from handler_functions.topic_2.stage_three.topic_two_stage_three import handle_topic_two_stage_three
 
 '''
 Handler function for free text messages that the user sends. It determines which topic
@@ -55,6 +56,6 @@ async def reply_to_user_message(update: Update, user_id: int, user_message: str)
         elif (current_stage == 2):
             await handle_topic_two_stage_two(user_id, update, user_message)
         else:
-            print("TODO for stage 2")
+            await handle_topic_two_stage_three(user_id, update, user_message)
     else:
         await update.message.reply_text("We are still constructing this part of the conversational flow.")

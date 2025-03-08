@@ -123,3 +123,13 @@ REMARKS:
 Tips to cover: {}
 '''
 )
+
+
+TOPIC_2_STAGE_2_TRANSITION_PROMPT_ONE = "Ok. Regarding the deepfake video on DPM Wong, we have discussed a few tips to spot a deepfake."
+TOPIC_2_STAGE_2_TRANSITION_PROMPT_TWO =  "What other ways do you think we can use to spot deepfakes?"
+
+
+'''
+TOPIC 2 STAGE 3: General discussion on how to spot deepfakes
+'''
+TOPIC_2_STAGE_3_PROMPT = ""
