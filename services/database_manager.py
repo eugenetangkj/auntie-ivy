@@ -394,8 +394,9 @@ Add a list of knowledge rows into the knowledge table
 Parameters:
     - user_id: ID of the user
     - knowledge_rows: List of knowledge to be added
+    - topic: Topic associated with the knowledge
 '''
-def add_knowledge(user_id, knowledge_rows):
+def add_knowledge(user_id, knowledge_rows, topic):
     # Connect to the database
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -404,10 +405,10 @@ def add_knowledge(user_id, knowledge_rows):
     for knowledge_row in knowledge_rows:
         cursor.execute(
             """
-            INSERT INTO knowledge (user_id, fact, date_updated)
-            VALUES (%s, %s, %s)
+            INSERT INTO knowledge (user_id, fact, topic, date_updated)
+            VALUES (%s, %s, %s, %s)
             """,
-            (user_id, knowledge_row, datetime.now())
+            (user_id, knowledge_row, topic, datetime.now())
         )
     
     # Commit the transaction and close the connection
@@ -417,22 +418,23 @@ def add_knowledge(user_id, knowledge_rows):
 
 
 '''
-Retrieves the current knowledge facts of the agent.
+Retrieves the current knowledge facts of the agent for a given topic
 
 Parameters:
     - user_id: ID of the user
+    - topic: Topic to be retrieved
 
 Returns:
-    - A list of knowledge facts that the agent currently has
+    - A list of knowledge facts that the agent currently has for the given topic
 
 '''
-def fetchKnowledge(user_id):
+def fetchKnowledge(user_id, topic):
     # Connect to the database
     conn = get_db_connection()
     cursor = conn.cursor()
 
     # Execute query to fetch all rows that match the given user_id
-    cursor.execute("SELECT fact FROM knowledge WHERE user_id = %s", (user_id,))
+    cursor.execute("SELECT fact FROM knowledge WHERE user_id = %s AND topic = %s", (user_id, topic,))
     
     # Fetch all matching rows
     rows = cursor.fetchall()
@@ -452,18 +454,19 @@ Retrieves the current knowledge facts of the agent, along with the IDs of the kn
 
 Parameters:
     - user_id: ID of the user
+    - topic: Topic associated with the knowledge
 
 Returns:
     - A list of tuples. Each tuple is (id, knowledge_fact)
 
 '''
-def fetchKnowledgeWithId(user_id):
+def fetchKnowledgeWithId(user_id, topic):
     try:
         # Connect to the database using a context manager
         with get_db_connection() as conn:
             with conn.cursor() as cursor:
                 # Execute query to fetch both id and fact columns
-                cursor.execute("SELECT id, fact FROM knowledge WHERE user_id = %s", (user_id,))
+                cursor.execute("SELECT id, fact FROM knowledge WHERE user_id = %s AND topic = %s", (user_id, topic))
                 rows = cursor.fetchall()
                 
                 # Extract (id, fact) tuples into a list
@@ -472,7 +475,6 @@ def fetchKnowledgeWithId(user_id):
     except Exception as e:
         print(f"Error fetching knowledge: {e}")
         return []
-
 
 
 '''
@@ -502,6 +504,7 @@ def fetchKnowledgeFactUsingId(user_id, fact_id):
     
     # Return the fact if found, else None
     return row[0] if row else None
+
 
 '''
 Updates a given knowledge fact.

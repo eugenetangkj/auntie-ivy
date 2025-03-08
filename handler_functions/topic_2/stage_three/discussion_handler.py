@@ -1,20 +1,17 @@
-from prompts.topic_1_prompts import TOPIC_1_STAGE_1_INTENT_THREE_PROMPT
+from prompts.topic_2_prompts import TOPIC_2_STAGE_3_DISCUSSION_PROMPT
 from services.openai_manager import generate_text_gpt
 from services.message_manager import prepare_messages_array, produce_text_or_voice_message
-from services.helper_functions import convert_list_to_bullet_points
-from services.database_manager import fetchKnowledge
 
 
 '''
 Properties
 '''
-current_topic = 1
-current_stage = 1
+current_topic = 2
+current_stage = 3
 
 
 '''
-Handles what to do if the learner needs help or is asking a question. The agent tries to formulate
-a response based on its current knowledge.
+Handles the discussion on how to spot deepfakes
 
 Parameters:
     - user_id: ID of the user
@@ -23,14 +20,11 @@ Parameters:
 Return:
     - No return value
 '''
-async def formulate_response_intent_three(user_id, update):
-    knowledge_facts = fetchKnowledge(user_id, current_topic)
-    knowledge_facts_string = convert_list_to_bullet_points(knowledge_facts)
+async def handle_discussion(user_id, update):
 
-    
-    
+    # Prepare discussion handler
     messages = prepare_messages_array(
-        prompt=TOPIC_1_STAGE_1_INTENT_THREE_PROMPT.format(knowledge_facts_string),
+        prompt=TOPIC_2_STAGE_3_DISCUSSION_PROMPT,
         user_id=user_id,
         lower_bound_topic=current_topic,
         lower_bound_stage=current_stage,
@@ -43,6 +37,5 @@ async def formulate_response_intent_three(user_id, update):
     message = response
 
 
-    # Produce output and save to the database
+    # Produce output
     await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
-

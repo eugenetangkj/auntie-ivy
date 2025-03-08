@@ -22,6 +22,7 @@ CREATE TABLE knowledge (
     id SERIAL PRIMARY KEY,
 	user_id BIGINT NOT NULL,
     fact TEXT NOT NULL,
+    topic INT NOT NULL,
     date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Cascading deletion where if a user is deleted, all the knowledge with the user will be cleared as well
