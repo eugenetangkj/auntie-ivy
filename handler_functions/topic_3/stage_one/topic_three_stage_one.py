@@ -1,15 +1,9 @@
-from services.database_manager import saveMessageToConversationHistory
+from services.database_manager import saveMessageToConversationHistory, fetchConversationHistory, updateUserTopicAndStage
 from telegram import Update
 from services.message_manager import produce_text_or_voice_message, prepare_messages_array
 from services.openai_manager import generate_text_gpt
 from definitions.role import Role
-from handler_functions.topic_1.determine_relevance import determine_if_answer_is_relevant
-from handler_functions.topic_1.intent_classifier import determine_intent
-from handler_functions.topic_1.handle_intent_one import formulate_response_intent_one
-from handler_functions.topic_1.handle_intent_two import formulate_response_intent_two
-from handler_functions.topic_1.handle_intent_three import formulate_response_intent_three
-from handler_functions.topic_1.handle_intent_four import formulate_response_intent_four
-from prompts.topic_3_prompts import TOPIC_3_STAGE_1_PROMPT
+from prompts.topic_3_prompts import TOPIC_3_STAGE_1_PROMPT, TOPIC_3_STAGE_1_PROMPT_CONCLUDING, TOPIC_3_STAGE_2_MESSAGES
 
 
 '''
@@ -17,6 +11,7 @@ Properties
 '''
 current_topic = 3
 current_stage = 1
+number_of_messages_before_transition = 12
 
 
 '''
@@ -32,83 +27,47 @@ Returns:
     - No return value
 '''
 async def handle_topic_three_stage_one(user_id: int, update: Update, user_message: str):
-    messages = prepare_messages_array(
-        prompt=TOPIC_3_STAGE_1_PROMPT,
-        user_id=user_id,
-        lower_bound_topic=current_topic,
-        lower_bound_stage=current_stage,
-        upper_bound_topic=current_topic,
-        upper_bound_stage=current_stage
-    )
-
-
-
-    response = generate_text_gpt("gpt-4o", messages, 1)
-    message = response
-    await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-    # STEP 1: Determine if the user answered something relevant to the conversation
-    did_user_give_a_relevant_answer = determine_if_answer_is_relevant(user_id, user_message)
-    if not did_user_give_a_relevant_answer:
-        # Answer was not relevant or cannot be determined
-        # Do not save the current pair of messages, just tell the learner to try again
-        await produce_text_or_voice_message(
-            user_id,
-            "I am sorry but I did not understand that based on the context of the conversation. Let's stick to the conversation.",
-            current_topic,
-            current_stage,
-            update,
-            False
-        )
-        return
-    
-
-    # STEP 2: Intent classifier
+    # Save the user's response
     saveMessageToConversationHistory(user_id, Role.USER, user_message, current_topic, current_stage)
-    intent_number = determine_intent(user_id)
 
+    # Check how many messages are there already
+    number_of_messages = len(fetchConversationHistory(user_id, current_topic, current_stage, current_topic, current_stage))
+    if (number_of_messages >= number_of_messages_before_transition):
+        # Conclude and move onto the next topic
 
-    if (intent_number == 1):
-        print(1)
-        await formulate_response_intent_one(user_id, update)
-    elif (intent_number == 2):
-        print(2)
-        await formulate_response_intent_two(user_id, update)
-    elif (intent_number == 3):
-        print(3)
-        await formulate_response_intent_three(user_id, update)
+        # STEP 1: Prepare a transition message
+        messages = prepare_messages_array(
+            prompt=TOPIC_3_STAGE_1_PROMPT_CONCLUDING,
+            user_id=user_id,
+            lower_bound_topic=current_topic,
+            lower_bound_stage=current_stage,
+            upper_bound_topic=current_topic,
+            upper_bound_stage=current_stage
+        )
+        response = generate_text_gpt("gpt-4o", messages, 1)
+        message = response
+        await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
+
+        # STEP 2: Output the hard-coded messages to discuss about the next topic
+        for message in TOPIC_3_STAGE_2_MESSAGES:
+            saveMessageToConversationHistory(user_id, Role.SYSTEM, message, current_topic, current_stage + 1)
+            await update.message.reply_text(message)
+        
+        # STEP 3: Update the user topic and substage
+        updateUserTopicAndStage(user_id, current_topic, current_stage + 1)
+
     else:
-        print(4)
-        await formulate_response_intent_four(user_id, update)
+        # Continue talking about the current topic
+        messages = prepare_messages_array(
+            prompt=TOPIC_3_STAGE_1_PROMPT,
+            user_id=user_id,
+            lower_bound_topic=current_topic,
+            lower_bound_stage=current_stage,
+            upper_bound_topic=current_topic,
+            upper_bound_stage=current_stage
+        )
+        response = generate_text_gpt("gpt-4o", messages, 1)
+        message = response
+
+        # Produce response
+        await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
