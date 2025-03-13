@@ -31,7 +31,7 @@ async def handle_topic_three_stage_five(user_id: int, update: Update, user_messa
 
 
     # Continue talking about the current topic
-    agent_stance = 'good' if fetchUserStance(user_id) == 'good' else 'bad'
+    agent_stance = 'bad' if fetchUserStance(user_id) == 'good' else 'bad'
     messages = prepare_messages_array(
         prompt=TOPIC_3_STAGE_5_PROMPT.format(agent_stance),
         user_id=user_id,
