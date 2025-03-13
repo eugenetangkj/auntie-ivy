@@ -8,6 +8,10 @@ from handler_functions.topic_2.stage_two.topic_two_stage_two import handle_topic
 from handler_functions.topic_2.stage_three.topic_two_stage_three import handle_topic_two_stage_three
 from handler_functions.topic_3.stage_one.topic_three_stage_one import handle_topic_three_stage_one
 from handler_functions.topic_3.stage_two.topic_three_stage_two import handle_topic_three_stage_two
+from handler_functions.topic_3.stage_three.topic_three_stage_three import handle_topic_three_stage_three
+from handler_functions.topic_3.stage_four.topic_three_stage_four import handle_topic_three_stage_four
+from handler_functions.topic_3.stage_five.topic_three_stage_five import handle_topic_three_stage_five
+
 
 '''
 Handler function for free text messages that the user sends. It determines which topic
@@ -65,6 +69,12 @@ async def reply_to_user_message(update: Update, user_id: int, user_message: str)
             await handle_topic_three_stage_one(user_id, update, user_message)
         elif (current_stage == 2):
             await handle_topic_three_stage_two(user_id, update, user_message)
+        elif (current_stage == 3):
+            await handle_topic_three_stage_three(user_id, update, user_message)
+        elif (current_stage == 4):
+            await handle_topic_three_stage_four(user_id, update, user_message)
+        elif (current_stage == 5):
+            await handle_topic_three_stage_five(user_id, update, user_message)
 
     else:
         await update.message.reply_text("We are still constructing this part of the conversational flow.")

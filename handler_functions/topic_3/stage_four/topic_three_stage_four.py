@@ -3,18 +3,18 @@ from telegram import Update
 from services.message_manager import produce_text_or_voice_message, prepare_messages_array
 from services.openai_manager import generate_text_gpt
 from definitions.role import Role
-from prompts.topic_3_prompts import TOPIC_3_STAGE_2_DETERMINE_STANCE, TOPIC_3_STAGE_2_CLARIFICATION_MESSAGE, TOPIC_3_STAGE_3_PROMPT
+from prompts.topic_3_prompts import TOPIC_3_STAGE_4_DETERMINE_STANCE, TOPIC_3_STAGE_2_CLARIFICATION_MESSAGE, TOPIC_3_STAGE_5_PROMPT
 
 
 '''
 Properties
 '''
 current_topic = 3
-current_stage = 2
+current_stage = 4
 
 
 '''
-Determines the learner's stance on whether using deepfakes in health education
+Determines the learner's stance on whether using deepfakes in grief management
 is good or bad.
 
 Parameters:
@@ -25,10 +25,10 @@ Parameters:
 Returns:
     - No return value
 '''
-async def handle_topic_three_stage_two(user_id: int, update: Update, user_message: str):
+async def handle_topic_three_stage_four(user_id: int, update: Update, user_message: str):
     # STEP 1: Determine the learner's stance
     messages = prepare_messages_array(
-            prompt=TOPIC_3_STAGE_2_DETERMINE_STANCE.format(user_message),
+            prompt=TOPIC_3_STAGE_4_DETERMINE_STANCE.format(user_message),
             user_id=user_id,
             lower_bound_topic=current_topic + 1, # Do not want to fetch any conversation history
             lower_bound_stage=current_stage,
@@ -47,8 +47,9 @@ async def handle_topic_three_stage_two(user_id: int, update: Update, user_messag
         updateUserTopicAndStage(user_id, current_topic, current_stage + 1)
 
         # Step 2: Respond to the learner's message
+        agent_stance = 'good' if message == 'good' else 'bad'
         messages = prepare_messages_array(
-            prompt=TOPIC_3_STAGE_3_PROMPT.format(message),
+            prompt=TOPIC_3_STAGE_5_PROMPT.format(agent_stance),
             user_id=user_id,
             lower_bound_topic=current_topic,
             lower_bound_stage=current_stage - 1,
