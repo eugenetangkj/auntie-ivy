@@ -2,6 +2,7 @@ CREATE TABLE users (
     user_id BIGINT PRIMARY KEY,
 	current_topic integer DEFAULT 1,
     current_stage integer DEFAULT 1,
+    stance TEXT,
     is_audio_enabled BOOLEAN NOT NULL DEFAULT false
 );
 

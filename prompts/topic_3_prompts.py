@@ -41,10 +41,26 @@ GOAL:
 
 
 '''
-TOPIC 3 STAGE 2: Health Education
+TOPIC 3 STAGE 2: Determining stance for health education
 '''
 TOPIC_3_STAGE_2_MESSAGES = (
     "Also, do you know that deepfakes can be used in health education? People tend to trust doctors and nurses more than someone without a medical background, right?",
     "That's why deepfakes can be used to create videos of doctors and nurses encouraging people to go for health check-ups and adopt healthy habits, using them to make the message more convincing.",
-    "What do you think? Do you think such usage of deepfakes is good or bad?"
+    "What do you think? Do you think such usage of deepfakes is primarily good or bad?"
 )
+
+TOPIC_3_STAGE_2_DETERMINE_STANCE = (
+'''
+You asked a senior whether he thinks using deepfakes for health education is primarily good or bad.
+
+Goal:
+- Analyse the senior's reply to determine their stance.
+- Reply with 'good' if they see it as mostly positive, 'bad' if they see it as mostly negative, or 'unsure' if their stance is unclear.
+- Respond with only one word.
+
+The senior's reply:
+{}
+'''
+)
+
+TOPIC_3_STAGE_2_CLARIFICATION_MESSAGE = 'Sorry, I did not quite get your opinion. Do you think using deepfakes for health education is primarily good or bad?'

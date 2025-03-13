@@ -15,8 +15,8 @@ number_of_messages_before_transition = 12
 
 
 '''
-Determines how the agent should reply to the user in topic 1 stage 1, which is about discussing
-on how a deepfake is created.
+Determines how the agent should reply to the user in topic 3 stage 2, which is about discussing
+how deepfakes is bad for fake news.
 
 Parameters:
     - user_id: User id of the user

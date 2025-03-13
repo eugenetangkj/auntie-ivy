@@ -624,3 +624,30 @@ def remove_contradicting_facts_for_user(user_id):
     # Close the connection
     cursor.close()
     conn.close()
+
+
+'''
+Updates the stance of the user.
+
+Parameters:
+    - user_id: ID of the user whose stance is to be updated
+    - new_stance: New stance of the user
+
+Returns:
+    - No return value
+
+'''
+def updateUserStance(user_id, new_stance):
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Update the user's stage and substage
+    cursor.execute(
+        "UPDATE users SET stance = %s WHERE user_id = %s",
+        (new_stance, user_id)
+    )
+
+    # Commit the transaction and close the connection
+    conn.commit()
+    conn.close()
