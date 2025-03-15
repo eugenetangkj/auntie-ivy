@@ -58,6 +58,7 @@ async def handle_topic_two_stage_three(user_id: int, update: Update, user_messag
     if (analysed_message.lower() != 'discussion'):
         # It is a tip on spotting deepfakes
         fact_status = check_tip_in_knowledge_base(user_id, analysed_message)
+        print(fact_status)
 
         if (fact_status == 'new'):
             # Add to the knowledge base as it is absent

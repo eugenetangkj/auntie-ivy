@@ -41,7 +41,6 @@ def prepare_messages_array(prompt, user_id, lower_bound_topic, lower_bound_stage
         upper_bound_stage)
     formatted_conversation_history = [{"role": role, "content": message} for role, message in conversation_history]
 
-
     # Combine into a single messages list
     messages.extend(formatted_conversation_history)
 

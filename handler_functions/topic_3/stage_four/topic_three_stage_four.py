@@ -47,7 +47,7 @@ async def handle_topic_three_stage_four(user_id: int, update: Update, user_messa
         updateUserTopicAndStage(user_id, current_topic, current_stage + 1)
 
         # Step 2: Respond to the learner's message
-        agent_stance = 'good' if message == 'good' else 'bad'
+        agent_stance = 'bad' if message == 'good' else 'bad' # We want opposing
         messages = prepare_messages_array(
             prompt=TOPIC_3_STAGE_5_PROMPT.format(agent_stance),
             user_id=user_id,

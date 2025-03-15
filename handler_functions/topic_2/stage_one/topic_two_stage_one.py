@@ -38,7 +38,7 @@ async def handle_topic_two_stage_one(user_id: int, update: Update, user_message:
         upper_bound_topic=current_topic,
         upper_bound_stage=current_stage
     )
-    response = generate_text_gpt("gpt-4o", messages, 1)
+    response = generate_text_gpt("gpt-4o", messages, 0)
     message = response
     
 

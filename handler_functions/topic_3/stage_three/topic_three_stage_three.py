@@ -63,7 +63,7 @@ async def handle_topic_three_stage_three(user_id: int, update: Update, user_mess
             prompt=TOPIC_3_STAGE_3_PROMPT.format(fetchUserStance(user_id)),
             user_id=user_id,
             lower_bound_topic=current_topic,
-            lower_bound_stage=current_stage,
+            lower_bound_stage=current_stage - 1,
             upper_bound_topic=current_topic,
             upper_bound_stage=current_stage
         )

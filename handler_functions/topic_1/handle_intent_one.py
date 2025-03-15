@@ -151,7 +151,7 @@ Return:
 '''
 async def handle_new_fact(user_id, update, fact):
     # Step 1: Add new fact into the knowledge base
-    add_knowledge(user_id, [fact])
+    add_knowledge(user_id, [fact], current_topic)
 
     # Step 2: Tell the user thanks for sharing the information
     random_message = random.choice(TOPIC_1_STAGE_1_NEW_KNOWLEDGE_MESSAGES)
