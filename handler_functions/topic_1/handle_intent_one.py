@@ -151,7 +151,7 @@ Return:
 '''
 async def handle_new_fact(user_id, update, fact):
     # Step 1: Add new fact into the knowledge base
-    add_knowledge(user_id, [fact])
+    add_knowledge(user_id, [fact], current_topic)
 
     # Step 2: Tell the user thanks for sharing the information
     random_message = random.choice(TOPIC_1_STAGE_1_NEW_KNOWLEDGE_MESSAGES)
@@ -167,7 +167,7 @@ async def handle_new_fact(user_id, update, fact):
         upper_bound_topic=current_topic,
         upper_bound_stage=current_stage
     )
-    response = generate_text_gpt("gpt-4o", messages, 0)
+    response = generate_text_gpt("gpt-4o", messages, 1)
     message = response
     await produce_text_or_voice_message(user_id, message, current_topic, current_stage, update, True)
 

@@ -252,23 +252,35 @@ def fetchConversationHistory(user_id, current_topic_lower_bound, current_stage_l
     # Connect to the database
     conn = get_db_connection()
     cursor = conn.cursor()
-    
-    # SQL query to fetch conversation history based on the conditions
-    cursor.execute("""
-    SELECT role, message 
-    FROM conversation_history
-    WHERE user_id = %s
-      AND (
-          (current_topic = %s AND current_stage >= %s) 
-          OR (current_topic > %s AND current_stage < %s)
-          OR (current_topic = %s AND current_stage <= %s)
-      )
-    ORDER BY datetime ASC
-    """, (user_id, 
-      current_topic_lower_bound, current_stage_lower_bound,
-      current_topic_lower_bound, current_stage_upper_bound,
-      current_topic_upper_bound, current_stage_upper_bound)
-    )
+
+    # Special case: If lower and upper bounds are the same, select only that exact topic-stage pair
+    if (current_topic_lower_bound == current_topic_upper_bound) and (current_stage_lower_bound == current_stage_upper_bound):
+        cursor.execute("""
+        SELECT role, message 
+        FROM conversation_history
+        WHERE user_id = %s
+          AND current_topic = %s
+          AND current_stage = %s
+        ORDER BY current_topic ASC, current_stage ASC
+        """, (user_id, current_topic_lower_bound, current_stage_lower_bound))
+
+    else:
+        # General case: Select messages within the topic-stage range
+        cursor.execute("""
+        SELECT role, message 
+        FROM conversation_history
+        WHERE user_id = %s
+          AND (
+              (current_topic = %s AND current_stage >= %s)
+              OR (current_topic > %s AND current_topic < %s)
+              OR (current_topic = %s AND current_stage <= %s)
+          )
+        ORDER BY current_topic ASC, current_stage ASC
+        """, (user_id, 
+          current_topic_lower_bound, current_stage_lower_bound,
+          current_topic_lower_bound, current_topic_upper_bound,
+          current_topic_upper_bound, current_stage_upper_bound)
+        )
     
     # Fetch all matching rows
     result = cursor.fetchall()
@@ -278,7 +290,6 @@ def fetchConversationHistory(user_id, current_topic_lower_bound, current_stage_l
     
     # Return output
     return result
-
 
 
 '''
@@ -624,3 +635,64 @@ def remove_contradicting_facts_for_user(user_id):
     # Close the connection
     cursor.close()
     conn.close()
+
+
+'''
+Updates the stance of the user.
+
+Parameters:
+    - user_id: ID of the user whose stance is to be updated
+    - new_stance: New stance of the user
+
+Returns:
+    - No return value
+
+'''
+def updateUserStance(user_id, new_stance):
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Update the user's stage and substage
+    cursor.execute(
+        "UPDATE users SET stance = %s WHERE user_id = %s",
+        (new_stance, user_id)
+    )
+
+    # Commit the transaction and close the connection
+    conn.commit()
+    conn.close()
+
+
+'''
+Fetches the stance of the user
+
+Parameters:
+    - user_id: ID of the user whose stance is to be retrieved
+
+Returns:
+    - stance: Stance of the user     
+'''
+def fetchUserStance(user_id):
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Fetch the user's stance based on their user_id
+    cursor.execute(
+        "SELECT stance FROM users WHERE user_id = %s",
+        (user_id,)
+    )
+
+    # Fetch the result and return the user's stance
+    stance = cursor.fetchone()
+
+    # Close the connection
+    conn.close()
+
+    # Return the stance if found, otherwise return empty stance
+    if stance:
+        return stance[0]
+    else:
+        return ''
+
