@@ -308,36 +308,53 @@ Returns:
 
 '''
 def fetchLatestMessage(user_id, current_topic_lower_bound, current_stage_lower_bound, current_topic_upper_bound, current_stage_upper_bound):
-    # Connect to the database
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    # SQL query to fetch the latest message based on the conditions
-    cursor.execute("""
-    SELECT message
-    FROM conversation_history
-    WHERE user_id = %s
-      AND (
-          (current_topic = %s AND current_stage >= %s) 
-          OR (current_topic > %s AND current_stage < %s)
-          OR (current_topic = %s AND current_stage <= %s)
-      )
-    ORDER BY datetime DESC
-    LIMIT 1
-    """, (user_id, 
-          current_topic_lower_bound, current_stage_lower_bound,
-          current_topic_lower_bound, current_stage_upper_bound,
-          current_topic_upper_bound, current_stage_upper_bound)
-    )
-    
-    # Fetch the latest message (only one row)
-    result = cursor.fetchone()
-    
-    # Close the connection
-    conn.close()
-    
-    # Return output
-    return result
+    '''
+    Retrieves the latest message in the conversation history of the given user that falls within
+    the specified topics and stages (inclusive).
+
+    Parameters:
+        - user_id: ID of the user whose conversation history is to be fetched
+        - current_topic_lower_bound: Lower bound for topic
+        - current_stage_lower_bound: Lower bound for stage
+        - current_topic_upper_bound: Upper bound for topic
+        - current_stage_upper_bound: Upper bound for stage
+
+    Returns:
+        - The latest message (string) or None if not found
+    '''
+    with get_db_connection() as conn:
+        with conn.cursor() as cursor:
+            if (current_topic_lower_bound == current_topic_upper_bound) and (current_stage_lower_bound == current_stage_upper_bound):
+                cursor.execute("""
+                    SELECT message
+                    FROM conversation_history
+                    WHERE user_id = %s
+                      AND current_topic = %s
+                      AND current_stage = %s
+                    ORDER BY datetime DESC
+                    LIMIT 1
+                """, (user_id, current_topic_lower_bound, current_stage_lower_bound))
+            else:
+                cursor.execute("""
+                    SELECT message
+                    FROM conversation_history
+                    WHERE user_id = %s
+                      AND (
+                          (current_topic = %s AND current_stage >= %s)
+                          OR (current_topic > %s AND current_topic < %s)
+                          OR (current_topic = %s AND current_stage <= %s)
+                      )
+                    ORDER BY datetime DESC
+                    LIMIT 1
+                """, (
+                    user_id,
+                    current_topic_lower_bound, current_stage_lower_bound,
+                    current_topic_lower_bound, current_topic_upper_bound,
+                    current_topic_upper_bound, current_stage_upper_bound
+                ))
+            row = cursor.fetchone()
+            return row[0] if row else None
+
 
 
 
