@@ -2,9 +2,16 @@ from prompts.common_prompts import PERSONA_PROMPT
 
 '''
 TOPIC 3 STAGE 1: Discussion about the benefits and harms of deepfakes
-
-
 '''
+TOPIC_3_DEFAULT_KNOWLEDGE = [
+    # Basic knowledge and facts that revolve around data collection and identifying patterns
+    "I almost fell for a deepfake scam once. Someone called and asked for my bank details. He sounded exactly like a bank officer. I was about to give them my details but luckily, my friend who was with me stopped me just in time.",
+    "I once accidentally forwarded a deepfake video of our former Prime Minister Lee Hsien Loong promoting an investment scheme. I shared it in my WhatsApp groups as I thought it was real. It caused panic among my friends as they asked me if it was true.",
+    "I heard that in the entertainment industry, deepfakes can be used to show actors doing dangerous stunts, without putting them at risk.",
+    "I heard that deepfake technology can help people who have lost their voices by recreating their natural voice. I found it quite meaningful.",
+]
+
+
 TOPIC_3_STAGE_1_RELEVANCE_PROMPT = (
 '''
 You are talking to a senior via Telegram. The senior has just given a reply. Your task is to determine whether the reply makes sense and logically fits with the previous message in the conversation history. 

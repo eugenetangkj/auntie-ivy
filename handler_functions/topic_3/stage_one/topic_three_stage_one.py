@@ -1,15 +1,12 @@
 from telegram import Update
 from services.message_manager import produce_text_or_voice_message
-
 from handler_functions.topic_3.stage_one.determine_relevance import determine_if_answer_is_relevant
-
 
 '''
 Properties
 '''
 current_topic = 3
 current_stage = 1
-
 
 
 '''
