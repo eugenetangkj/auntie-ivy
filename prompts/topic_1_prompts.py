@@ -6,11 +6,11 @@ TOPIC_1_STAGE_1_DEFAULT_KNOWLEDGE = [
     # Basic knowledge and facts that revolve around data collection and identifying patterns
     "Deepfakes are videos or images that use AI to replace someone's face or voice with another person's.",
     "I think to create a good deepfake, the AI needs a lot of images and videos of the person.",
-    "The AI will use the images and videos of the person to find a suitable one with the correct expression to replace the face in the image or video.",
+    "People collect the images and videos of the person and put them into the AI. The AI will use them to find a suitable one with the correct expression to replace the face in the original image or video, thus forming a deepfake.",
 
     # Some incorrect facts
     "We need a lot of time to make deepfakes.",
-    "Probably only those who are knowledgeable in AI can create them.",
+    "Probably only those who are knowledgeable in AI can create deepfakes.",
 ]
 
 

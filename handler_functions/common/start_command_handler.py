@@ -5,6 +5,7 @@ from services.database_manager import check_if_user_exist, add_user, determineUs
 from prompts.topic_1_prompts import TOPIC_1_STAGE_1_DEFAULT_KNOWLEDGE
 from prompts.topic_2_prompts import TOPIC_2_DEFAULT_KNOWLEDGE
 from definitions.role import Role
+from services.message_manager import produce_text_or_voice_message
 
 '''
 Handler function for /start command where it initiates the conversation, informing
@@ -38,14 +39,13 @@ async def handle_start(update: Update, _: CallbackContext):
     if topic == 1:
         add_knowledge(user_id, TOPIC_1_STAGE_1_DEFAULT_KNOWLEDGE, topic)
         start_message = START_COMMAND_MESSAGE_TOPIC_1.format(user_name)
-        saveMessageToConversationHistory(user_id, Role.SYSTEM, start_message, topic, 1)
-        await update.message.reply_text(start_message)
-
+        await produce_text_or_voice_message(user_id, start_message, topic, 1, update, True)
     elif topic == 2:
         add_knowledge(user_id, TOPIC_2_DEFAULT_KNOWLEDGE, topic)
 
         for start_message in START_COMMAND_MESSAGES_TOPIC_2:
             saveMessageToConversationHistory(user_id, Role.SYSTEM, start_message, topic, 1)
+            # As it involves a video link, we do not have audio for this.
             await update.message.reply_text(start_message)
 
     elif topic == 3:
