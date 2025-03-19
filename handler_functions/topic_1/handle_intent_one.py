@@ -43,20 +43,31 @@ async def formulate_response_intent_one(user_id, update):
     # Use OpenAI chat completion
     response = generate_text_gpt("gpt-4o", messages, 0)
     response_formatted = re.sub(r'\((\d+),\s*([^\)]*)\)', r'(\1, "\2")', response)
-    fact_id, fact = ast.literal_eval(response_formatted)
 
-    # Handle cases
-    if fact == "support":
-        await handle_supporting_fact(user_id, update)
-        print("Support")
-    elif fact == "contradict":
-        await handle_contradicting_fact(user_id, update, fact_id)
-        print("Contradict")
-    else:
-        # New fact
-        await handle_new_fact(user_id, update, fact)
-        print("New fact")
+    try:
+        fact_id, fact = ast.literal_eval(response_formatted)
 
+        # Handle cases
+        if fact == "support":
+            await handle_supporting_fact(user_id, update)
+            print("Support")
+        elif fact == "contradict":
+            await handle_contradicting_fact(user_id, update, fact_id)
+            print("Contradict")
+        else:
+            # New fact
+            await handle_new_fact(user_id, update, fact)
+            print("New fact")
+    except:
+        # An exception in parsing the response. Ask the user to try again.
+        await produce_text_or_voice_message(
+            user_id,
+            "I am sorry but I did not understand that based on the context of the conversation. Let's stick to the conversation.",
+            current_topic,
+            current_stage,
+            update,
+            False
+        )
 
 
 '''
