@@ -1,9 +1,10 @@
-from prompts.common_prompts import START_COMMAND_MESSAGE_TOPIC_1, START_COMMAND_MESSAGES_TOPIC_2, START_COMMAND_MESSAGE_TOPIC_3_ONE, START_COMMAND_MESSAGES_TOPIC_3_TWO
+from prompts.common_prompts import START_COMMAND_MESSAGE_TOPIC_1, START_COMMAND_MESSAGES_TOPIC_2, START_COMMAND_MESSAGE_TOPIC_3_ONE, START_COMMAND_MESSAGE_TOPIC_3_TWO
 from telegram import Update
 from telegram.ext import CallbackContext
 from services.database_manager import check_if_user_exist, add_user, determineUserTopic, updateUserTopicAndStage, add_knowledge, saveMessageToConversationHistory
 from prompts.topic_1_prompts import TOPIC_1_STAGE_1_DEFAULT_KNOWLEDGE
 from prompts.topic_2_prompts import TOPIC_2_DEFAULT_KNOWLEDGE
+from prompts.topic_3_prompts import TOPIC_3_DEFAULT_KNOWLEDGE
 from definitions.role import Role
 from services.message_manager import produce_text_or_voice_message
 
@@ -47,13 +48,11 @@ async def handle_start(update: Update, _: CallbackContext):
             saveMessageToConversationHistory(user_id, Role.SYSTEM, start_message, topic, 1)
             # As it involves a video link, we do not have audio for this.
             await update.message.reply_text(start_message)
-
     elif topic == 3:
+        # Populate with default knowledge
+        add_knowledge(user_id, TOPIC_3_DEFAULT_KNOWLEDGE, topic)
+
+        # Output the starting messages
         start_message = START_COMMAND_MESSAGE_TOPIC_3_ONE.format(user_name)
-        saveMessageToConversationHistory(user_id, Role.SYSTEM, start_message, topic, 1)
-        await update.message.reply_text(start_message)
-
-
-        for start_message in START_COMMAND_MESSAGES_TOPIC_3_TWO:
-            saveMessageToConversationHistory(user_id, Role.SYSTEM, start_message, topic, 1)
-            await update.message.reply_text(start_message)
+        await produce_text_or_voice_message(user_id, start_message, topic, 1, update, True)
+        await produce_text_or_voice_message(user_id, START_COMMAND_MESSAGE_TOPIC_3_TWO, topic, 1, update, True)
