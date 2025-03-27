@@ -71,6 +71,7 @@ Returns:
 """
 def generate_speech_whisper(input_text):
     # Step 1: Generate MP3 file from Whisper
+    print(input_text)
     client = get_openai_client()
     with client.audio.speech.with_streaming_response.create(
         model="tts-1",
