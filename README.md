@@ -129,12 +129,12 @@ This toggles the audio mode of the bot.
 #### `/topic` Command
 This allows you to navigate between the three topics supported by Auntie Ivy. The syntax is `/topic <topic_num>`.
 ```
-# To change to Topic 1, run this
+# To change to Topic 1, run this in the bot
 /topic 1
 
-# To change to Topic 2, run this
+# To change to Topic 2, run this in the bot
 /topic 2
 
-# To change to Topic 3, run this
+# To change to Topic 3, run this in the bot
 /topic 3
 ```
