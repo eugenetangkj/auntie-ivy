@@ -54,14 +54,17 @@ async def handle_voice_message(update: Update, _: CallbackContext):
         transcribed_message = client.audio.transcriptions.create(
             model="whisper-1",
             file=audio_file,
-            response_format="text"
+            response_format="text",
+            language="en"
         )
+        print(transcribed_message)
 
         # Let the bot process the user's message
         await reply_to_user_message(update, user_id, transcribed_message)
 
     except Exception as e:
         # Got problem transcribing with Whisper
+        print(e)
         await update.message.reply_text(VOICE_MESSAGE_TRANSCRIPTION_ERROR)
        
     finally:

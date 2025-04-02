@@ -38,7 +38,7 @@ TOPIC 2 STAGE 2: Discussion about the deepfake video on DPM Wong
 TOPIC_2_STAGE_2_RELEVANCE_CLASSIFIER_PROMPT = (
 '''
 You are talking to a senior via Telegram. Look at the conversation history and focus on the last message provided by the senior.
-For context, you are asking the senior how he might identify a deepfake video of Singapore DPM Lawrence Wong as fake.
+For context, you are asking the senior how he might identify a deepfake video of Singapore Prime Minister Lawrence Wong as fake.
 
 Your task:
 Determine the intent of the senior's last message based on the following categories and output only the
@@ -127,7 +127,7 @@ Tips to cover: {}
 )
 
 
-TOPIC_2_STAGE_2_TRANSITION_PROMPT_ONE = "Ok. Regarding the deepfake video on DPM Wong, we have discussed a few tips to spot a deepfake."
+TOPIC_2_STAGE_2_TRANSITION_PROMPT_ONE = "Ok. Regarding the deepfake video on PM Wong, we have discussed a few tips to spot a deepfake."
 TOPIC_2_STAGE_2_TRANSITION_PROMPT_TWO =  "What other ways do you think we can use to spot deepfakes?"
 
 
