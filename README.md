@@ -1,22 +1,26 @@
-## Auntie Irene
-An AI tutor chatbot that tutors older adults about deepfakes, adopting the persona of a fellow older adult who is knowledgeable about the topic. 🤖🧓
+## Auntie Ivy
+An AI peer-based conversational pedagogical agent that is designed for older adults to learn about deepfakes. 🧓
+
+### Topics
+The conversational flows of Auntie Ivy span 3 topics.
+
+1. How are deepfakes created?
+2. How to spot deepfakes?
+3. What are the benefits and harms of deepfakes?
 
 
-### Conversational Flow
-_Auntie Irene_ is designed to cover specific topics of deepfakes with older adults. The topics in the conversational flow are:
+### Characteristics
+Auntie Ivy takes on the persona of a peer older adult who is learning alongside the learner. It has the following characteristics:
 
-1. Introduction
-2. What are deepfakes?
-3. Benefits and harms of deepfakes
-4. How to spot deepfakes?
-5. What is the Singapore government doing about deepfakes?
-6. Recommended readings
+| Aspect          | Description                                                                                                                                               |
+|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Knowledge       | Has limited knowledge, which may include inaccuracies or gaps.                                                                                            |
+| Engagement      | A blend of reactive and proactive, responding to the learner while also taking initiative to guide the conversation.                                      |
+| Problem-Solving | Able to offer direct answers for simple factual questions that it knows the answers to, but engages in discussions for more subjective or complex topics. |
 
-> [!NOTE]
-> _Auntie Irene_ is still under the development phase. As such, do expect possible deviations from the above conversational flow or unnatural responses in certain circumstances.
 
 ### Tech Stack
-_Auntie Irene_ is a Telegram bot developed using Python and PostgresSQL. It uses OpenAI API for text and audio generation functionalities.
+Auntie Ivy is a Telegram bot developed using Python and PostgresSQL. It uses OpenAI API for text and audio generation functionalities.
 
 At the moment, it supports text input/ouput, as well as audio input/output.
 
@@ -25,12 +29,12 @@ At the moment, it supports text input/ouput, as well as audio input/output.
 1. Clone the project to a local directory of your preference.
 
 ```
-git clone https://github.com/eugenetangkj/auntie-irene.git
+git clone https://github.com/eugenetangkj/auntie-ivy.git
 ```
 
-2. Change directory to the root directory of the _Auntie Irene_ project.
+2. Change directory to the root directory of the Auntie Ivy project.
 ```
-cd auntie-irene
+cd auntie-ivy
 ```
 
 3. Download the Python packages required for the project as stated in [`requirements.txt`](requirements.txt)
@@ -52,7 +56,7 @@ pip install -r requirements.txt
 > You can refer to the [Windows tutorial](https://www.youtube.com/watch?v=v1d2Fa9FPOQ) and [macOS tutorial](https://www.youtube.com/watch?v=fy-42clnbmc) if required.
 
 
-5. Create two tables in the PostgreSQL database that you had created in Step 4 above. To do so, in your selected database, run the [`create_tables.sql`](/sql_files/create_tables.sql) file using the query tool in pgAdmin.
+5. Create four tables in the PostgreSQL database that you had created in Step 4 above. To do so, in your selected database, run the [`create_tables.sql`](/sql_files/create_tables.sql) file using the query tool in pgAdmin.
 
 
 6. In the root directory, create a new `.env` file.
@@ -82,7 +86,7 @@ python bot.py
 9. After running the command in Step 8, head to Telegram and start interacting with your bot.
 
 ### Interactions
-Currently, there are 2 supported ways for you to interact with the bot.
+Currently, there are 2 supported ways for you to interact with Auntie Ivy.
 1. Text message
 2. Voice message
 
@@ -96,10 +100,10 @@ Currently, there are 2 supported ways for you to interact with the bot.
 ### Commands
 There are several built-in commands for the bot.
 
-#### `start` Command
+#### `/start` Command
 This initialises the conversation and creates an entry for the user in the `users` table.
 
-#### `delete` Command
+#### `/delete` Command
 This deletes the current user in the `users` table and all of the user's conversation history in the `conversation_history` table. Use this command to effectively reset your conversation with the bot.
 
 ```
@@ -111,7 +115,7 @@ This deletes the current user in the `users` table and all of the user's convers
 > [!CAUTION]
 > The `/delete` command clears all of your conversation history with the bot. Only use it if you are sure that you want to reset your interactions with the bot.
 
-#### `audio` Command
+#### `/audio` Command
 This toggles the audio mode of the bot.
 - If the audio mode is enabled, the bot will reply using voice messages.
 - If the audio mode is disabled, the bot will reply using text messages.
@@ -121,3 +125,16 @@ This toggles the audio mode of the bot.
 
 > [!WARNING]
 > The audio mode uses OpenAI credits. Do use with discretion.
+
+#### `/topic` Command
+This allows you to navigate between the three topics supported by Auntie Ivy. The syntax is `/topic <topic_num>`.
+```
+# To change to Topic 1, run this
+/topic 1
+
+# To change to Topic 2, run this
+/topic 2
+
+# To change to Topic 3, run this
+/topic 3
+```
