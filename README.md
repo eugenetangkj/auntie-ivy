@@ -101,7 +101,7 @@ Currently, there are 2 supported ways for you to interact with Auntie Ivy.
 There are several built-in commands for the bot.
 
 #### `/start` Command
-This initialises the conversation and creates an entry for the user in the `users` table.
+This initialises the conversation and creates an entry for the user in the `users` table if the user does not yet exist.
 
 #### `/delete` Command
 This deletes the current user in the `users` table and all of the user's conversation history in the `conversation_history` table. Use this command to effectively reset your conversation with the bot.
